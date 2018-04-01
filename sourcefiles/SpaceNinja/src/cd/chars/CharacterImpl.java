@@ -550,7 +550,6 @@ public abstract class CharacterImpl extends EntityImpl implements Character {
 	
 	public void releaseRight(){
 		if(_canact && !_pressingl) {
-			System.out.println("herere");
 			_xvelocity = 0;
 			
 		}

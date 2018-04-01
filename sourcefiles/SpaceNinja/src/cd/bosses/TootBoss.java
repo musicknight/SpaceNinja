@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 public class TootBoss extends Boss {
 
 	private boolean _fightstarted;
-	private int _text = 1;
+	private int _text = 12;
 	private int _attack1var;
 	private boolean _raged;
 	
@@ -38,9 +38,7 @@ public class TootBoss extends Boss {
 				_staticimage = new Image("tootboss/won.png");
 				TheGame.setText(new Image("tootboss/text/won.png"));
 			}
-			if(_won) {
-				
-			}
+			
 		}
 		
 		if(_counter2 == 0) {
@@ -99,6 +97,7 @@ public class TootBoss extends Boss {
 		_attack1 = true;
 		_counter4 = 0;
 		_yvelocity = 5;
+		TheGame.playSound("/tootboss/sounds/drop.wav");
 		
 	}
 	
@@ -120,12 +119,14 @@ public class TootBoss extends Boss {
 			Hitbox a = new HitboxImpl("shot", this, false, _x, _y+40, 20, 20, -7, 0, 0, 1, new Image("tootboss/shot.png"));
 			a.setCircle(true);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/tootboss/sounds/shot.wav");
 		}
 		if(_raged) {
 			if(_counter4 > 45 && _counter % 5 == 0 && _counter4 < 85) {
 				Hitbox a = new HitboxImpl("shot", this, false, _x, _y+40, 20, 20, -7, 0, 0, 1, new Image("tootboss/shot.png"));
 				a.setCircle(true);
 				TheGame._attacks.add(a);
+				TheGame.playSound("/tootboss/sounds/shot.wav");
 			}
 		}
 		if(_counter4 == 70) {

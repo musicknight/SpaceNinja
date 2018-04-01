@@ -2,6 +2,7 @@ package cd;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import cd.bosses.Boss;
 import cd.chars.Character;
 
 public class OffsetHitbox extends HitboxImpl {
@@ -17,6 +18,12 @@ public class OffsetHitbox extends HitboxImpl {
 	}
 	public OffsetHitbox(String ID, Character c, int xoffset, int yoffset, int width, int height, double knockback, double damage, Image i) {
 		super(ID, c, false, c.getRealX()+xoffset, c.getRealY()+yoffset, width, height, c.getXVelocity(), c.getYVelocity(),
+				knockback, damage, i);
+		_xoffset = xoffset;
+		_yoffset = yoffset;
+	}
+	public OffsetHitbox(String ID, Boss c, int xoffset, int yoffset, int width, int height, double knockback, double damage, Image i) {
+		super(ID, c, false, c.getX()+xoffset, c.getY()+yoffset, width, height, c.getXVelocity(), c.getYVelocity(),
 				knockback, damage, i);
 		_xoffset = xoffset;
 		_yoffset = yoffset;

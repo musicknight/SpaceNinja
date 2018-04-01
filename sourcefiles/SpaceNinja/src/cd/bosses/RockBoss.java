@@ -19,6 +19,9 @@ public class RockBoss extends Boss {
 	private int _repeat1;
 	private int _repeat2;
 	private int _repeat3;
+	private int _repeatno1;
+	private int _repeatno2;
+	private int _repeatno3;
 	// true if stunned the player
 	private boolean _stunned;
 	
@@ -38,7 +41,7 @@ public class RockBoss extends Boss {
 		if(TheGame._character1.getLives() == 0) {
 			_won = true;
 		}
-		if(_counter2 == 0) {
+		if(_counter2 == 0 && !_won && !_dead) {
 			
 				Random r = new Random();
 				int i = r.nextInt(4);
@@ -83,6 +86,7 @@ public class RockBoss extends Boss {
 		}
 		if(_dead) {
 			_staticimage = new Image("rockboss/sprites/dead.png");
+			TheGame.setText(new Image("rockboss/text/dead.png"));
 			_xvelocity = 0;
 			_yvelocity = 2;
 		}
@@ -125,6 +129,7 @@ public class RockBoss extends Boss {
 			}
 			if(_won) {
 				_staticimage = new Image("rockboss/sprites/victory.png");
+				TheGame.setText(new Image("rockboss/text/won.png"));
 			}
 			if(_counter3 == 120 && !_won) {
 				Random r = new Random();
@@ -139,24 +144,42 @@ public class RockBoss extends Boss {
 				if(_repeat3 == 2) {
 					i = 0;
 				}
+				if(_repeatno1 == 4) {
+					i = 1;
+				}
+				if(_repeatno2 == 4) {
+					i = 0;
+				}
+				if(_repeatno3 == 4) {
+					i = 2;
+				}
 				if(i == 1) {
 					_attack1var = r.nextInt(3);
 					attack1();
 					_repeat1++;
 					_repeat2 = 0;
 					_repeat3 = 0;
+					_repeatno1 = 0;
+					_repeatno2++;
+					_repeatno3++;
 				}
 				if(i == 0) {
 					attack2();
 					_repeat2++;
 					_repeat1 = 0;
 					_repeat3 = 0;
+					_repeatno1++;
+					_repeatno2 = 0;
+					_repeatno3++;
 				}
 				if(i == 2) {
 					attack3();
 					_repeat3++;
 					_repeat1 = 0;
 					_repeat2 = 0;
+					_repeatno1++;
+					_repeatno2++;
+					_repeatno3 = 0;
 				}
 				
 			}
@@ -210,6 +233,8 @@ public class RockBoss extends Boss {
 			
 			a.setBounces(true);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/rockboss/sounds/shot.wav");
+			
 		}
 		} else {
 			if(_counter4 > 14 && _counter4 % 6 == 0 && _counter4 < 110) {
@@ -226,6 +251,7 @@ public class RockBoss extends Boss {
 				
 				a.setBounces(true);
 				TheGame._attacks.add(a);
+				TheGame.playSound("/rockboss/sounds/shot.wav");
 			}
 		}
 		if(_counter4 == 120) {
@@ -282,9 +308,11 @@ public class RockBoss extends Boss {
 		}
 		if(_counter1 == 185) {
 			_yvelocity = 30;
+			
 		}
 		if(_counter1 == 192) {
 			_yvelocity = 0;
+			TheGame.playSound("/rockboss/sounds/slam.wav");
 		}
 		// easy variant attack ending
 		if(_health > 250) {
@@ -315,18 +343,21 @@ public class RockBoss extends Boss {
 		}
 		if(_counter1 == 213) {
 			_yvelocity = -30;
+			TheGame.playSound("/rockboss/sounds/slam.wav");
 		}
 		if(_counter1 == 220) {
 			_yvelocity = 30;
 		}
 		if(_counter1 == 227) {
 			_yvelocity = -30;
+			TheGame.playSound("/rockboss/sounds/slam.wav");
 		}
 		if(_counter1 == 234) {
 			_yvelocity = 30;
 		}
 		if(_counter1 == 241) {
 			_yvelocity = 0;
+			TheGame.playSound("/rockboss/sounds/slam.wav");
 		}
 		if(_counter1 == 251) {
 			_yvelocity = -15;;
@@ -359,6 +390,7 @@ public class RockBoss extends Boss {
 		}
 		if(_counter4 == 37) {
 			_yvelocity = 0;
+			TheGame.playSound("/rockboss/sounds/slam.wav");
 			if(TheGame._character1.getY() == 392) {
 				TheGame._character1.setCanAct(false);
 				TheGame._character1.setXVelocity(0);
@@ -372,10 +404,12 @@ public class RockBoss extends Boss {
 		if(_counter4 == 42) {
 			Hitbox 	a = (new HitboxImpl("stunblast", this, false, _x+115, _y+70, 60, 60, -25 , 0, 0, 1, new Image("rockboss/sprites/blast.png")));
 			TheGame._attacks.add(a);
+			TheGame.playSound("/rockboss/sounds/shot.wav");
 		}
 		if(_health < 250 && _counter4 > 42 && _counter4 < 65  && _counter4 % 3 == 0) {
 			Hitbox 	a = (new HitboxImpl("stunblast", this, false, _x+115, _y+70, 60, 60, -25 , 0, 0, 1, new Image("rockboss/sprites/blast.png")));	
 			TheGame._attacks.add(a);
+			TheGame.playSound("/rockboss/sounds/shot.wav");
 		}
 		if(_counter4 == 57) {
 			_stunned = false;

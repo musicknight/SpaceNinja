@@ -17,13 +17,17 @@ public class GhostBoss extends Boss {
 	private int _repeat2;
 	private int _repeat3;
 	private int _repeat4;
+	private int _repeatno1;
+	private int _repeatno2;
+	private int _repeatno3;
+	private int _repeatno4;
 	private int _attack2var;
 	private int _attack4stage;
 	private List<Image> _shot = new ArrayList<Image>();
 
 	public GhostBoss() {
 		super(900, 600, "ghostboss");
-		_health = 10;
+		_health = 1000;
 		_width =(int) (145 * 1.5);
 		_height =(int)( 134 * 1.5);
 		_staticimage = new Image("ghostboss/port2.png");
@@ -91,6 +95,7 @@ public class GhostBoss extends Boss {
 			_attack4 = false;
 			if(_counter2 == 30) {
 				_staticimage = new Image("ghostboss/port1.png");
+				TheGame.playSound("/ghostboss/sounds/port1.wav");
 			}
 			if(_counter2 == 34) {
 				_staticimage = new Image("ghostboss/port2.png");	
@@ -111,11 +116,12 @@ public class GhostBoss extends Boss {
 		} else {
 			_counter1 = 0;
 		}
+		
 		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead) {
-			System.out.println(TheGame._character1.getLives());
 			if(TheGame._character1.getLives() <= 0) {
 				_won = true;
 				_staticimage = new Image("ghostboss/won.png");
+				TheGame.setText(new Image("ghostboss/text/won.png"));
 			}
 			if(_counter3 == 120 && !_won) {
 				Random r = new Random();
@@ -134,12 +140,28 @@ public class GhostBoss extends Boss {
 				if(_repeat4 == 2) {
 					i = 1;
 				}
+				if(_repeatno1 == 5) {
+					i = 0;
+				}
+				if(_repeatno2 == 5) {
+					i = 1;
+				}
+				if(_repeatno3 == 5) {
+					i = 2;
+				}
+				if(_repeatno4 == 5) {
+					i = 3;
+				}
 				if(i == 0) {
 					attack1();
 					_repeat1++;
 					_repeat2 = 0;
 					_repeat3 = 0;
 					_repeat4 = 0;
+					_repeatno1 = 0;
+					_repeatno2++;
+					_repeatno3++;
+					_repeatno4++;
 				}
 				if(i == 1) {
 					_attack2var = r.nextInt(3);
@@ -148,6 +170,10 @@ public class GhostBoss extends Boss {
 					_repeat1 = 0;
 					_repeat3 = 0;
 					_repeat4 = 0;
+					_repeatno1++;
+					_repeatno2 =0;
+					_repeatno3++;
+					_repeatno4++;
 				}
 				if(i == 2) {
 					attack3();
@@ -155,6 +181,10 @@ public class GhostBoss extends Boss {
 					_repeat1 = 0;
 					_repeat2 = 0;
 					_repeat4 = 0;
+					_repeatno1++;
+					_repeatno2++;
+					_repeatno3=0;
+					_repeatno4++;
 				}
 				if(i == 3) {
 					attack4();
@@ -162,6 +192,10 @@ public class GhostBoss extends Boss {
 					_repeat1 = 0;
 					_repeat2 = 0;
 					_repeat3 = 0;
+					_repeatno1++;
+					_repeatno2++;
+					_repeatno3++;
+					_repeatno4=0;
 				}
 			}
 		}
@@ -182,9 +216,11 @@ public class GhostBoss extends Boss {
 		if(_counter2 == 20) {
 			_x = 607;
 			_y = 80;
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter2 == 24) {
 			_staticimage = new Image("ghostboss/port1.png");
+			
 		}
 		if(_counter2 == 28) {
 			_staticimage = new Image("ghostboss/1.png");
@@ -197,6 +233,7 @@ public class GhostBoss extends Boss {
 		_attack1 = true;
 		_immune = true;
 		_staticimage = new Image("ghostboss/port1.png");
+		TheGame.playSound("/ghostboss/sounds/port1.wav");
 	}
 	public void executeAttack1() {
 		if(_counter4 == 4) {
@@ -211,6 +248,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 18) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 22) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -222,10 +260,12 @@ public class GhostBoss extends Boss {
 		if(_counter4 >= 50 && _counter4 % 100 == 0) {
 			Hitbox a = new AnimatedHitbox("spiral", this, false, 0, _y+ 50, 150, 150, 5, 0, 0, 1, _shot, 4);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/ghostboss/sounds/long.wav");
 		}
 		if(_counter4 == 430) {
 			_immune = true;
 			_staticimage = new Image("ghostboss/port1.png");
+			TheGame.playSound("/ghostboss/sounds/port1.wav");
 		}
 		if(_counter4 == 434) {
 			_staticimage = new Image("ghostboss/port2.png");
@@ -239,6 +279,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 442) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 446) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -255,6 +296,7 @@ public class GhostBoss extends Boss {
 		_attack2 = true;
 		_immune = true;
 		_staticimage = new Image("ghostboss/port1.png");
+		TheGame.playSound("/ghostboss/sounds/port1.wav");
 	}
 	public void executeAttack2() {
 		if(_counter4 == 4) {
@@ -268,6 +310,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 18) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 22) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -294,6 +337,7 @@ public class GhostBoss extends Boss {
 			c.setCircle(true);
 			c.setDissappearOnHit(false);
 			TheGame._attacks.add(c);
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 170) {
 			TheGame.clearHitboxes("spiral", this);
@@ -368,6 +412,7 @@ public class GhostBoss extends Boss {
 			e.setCircle(true);
 			e.setDissappearOnHit(false);
 			TheGame._attacks.add(e);
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 290) {
 			TheGame.clearHitboxes("spiral", this);
@@ -442,6 +487,7 @@ public class GhostBoss extends Boss {
 			e.setCircle(true);
 			e.setDissappearOnHit(false);
 			TheGame._attacks.add(e);
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 410) {
 			TheGame.clearHitboxes("spiral", this);
@@ -547,6 +593,7 @@ public class GhostBoss extends Boss {
 			fb.setCircle(true);
 		    fb.setDissappearOnHit(false);
 			TheGame._attacks.add(fb);
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 530) {
 			TheGame.clearHitboxes("spiral", this);
@@ -554,6 +601,7 @@ public class GhostBoss extends Boss {
 		if(_counter4 == 530) {
 			_immune = true;
 			_staticimage = new Image("ghostboss/port1.png");
+			TheGame.playSound("/ghostboss/sounds/port1.wav");
 		}
 		if(_counter4 == 534) {
 			_staticimage = new Image("ghostboss/port2.png");
@@ -567,6 +615,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 542) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 546) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -583,6 +632,7 @@ public class GhostBoss extends Boss {
 		_counter4 = 0;
 		_immune = true;
 		_staticimage = new Image("ghostboss/port1.png");
+		TheGame.playSound("/ghostboss/sounds/port1.wav");
 	}
 	public void executeAttack3() {
 		if(_counter4 == 4) {
@@ -599,6 +649,7 @@ public class GhostBoss extends Boss {
 			fb.setCircle(true);
 		    fb.setDissappearOnHit(false);
 			TheGame._attacks.add(fb);
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 170) {
 			TheGame.clearHitboxes("spiral", this);
@@ -609,6 +660,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 180) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 184) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -626,6 +678,7 @@ public class GhostBoss extends Boss {
 		_counter4 = 0;
 		_immune = true;
 		_staticimage = new Image("ghostboss/port1.png");
+		TheGame.playSound("/ghostboss/sounds/port1.wav");
 	}
 	
 	public void executeAttack4() {
@@ -633,6 +686,7 @@ public class GhostBoss extends Boss {
 	
 		if(_counter4 == 0) {
 			_staticimage = new Image("ghostboss/port1.png");
+			TheGame.playSound("/ghostboss/sounds/port1.wav");
 		}
 		if(_counter4 == 4) {
 			_staticimage = new Image("ghostboss/port2.png");	
@@ -672,6 +726,7 @@ public class GhostBoss extends Boss {
 		}
 		if(_counter4 == 18) {
 			_staticimage = new Image("ghostboss/port2.png");
+			TheGame.playSound("/ghostboss/sounds/port2.wav");
 		}
 		if(_counter4 == 22) {
 			_staticimage = new Image("ghostboss/port1.png");
@@ -738,6 +793,7 @@ public class GhostBoss extends Boss {
 			    fb.setDissappearOnHit(false);
 				TheGame._attacks.add(fb);
 			}
+			TheGame.playSound("/ghostboss/sounds/short.wav");
 		}
 		if(_counter4 == 66) {
 			_attack4stage++;

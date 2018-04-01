@@ -21,6 +21,7 @@ public class BotBoss extends Boss {
 	private int _rage1count;
 	private int _rage2count;
 	private boolean _begin3;
+	private boolean _lasershot;
 	private Hitbox _body = new CharLinkedHitbox("botbody", this, 0, 1);
 	private boolean _spriteswitched;
 	private int _i;
@@ -31,6 +32,10 @@ public class BotBoss extends Boss {
 	private int _3phase;
 	private int _n;
 	private boolean _enraged;
+	private int _repeatno1;
+	private int _repeatno2;
+	private int _repeatno3;
+	private int _repeatno4;
 	public BotBoss() {
 		super(900, 600, "botboss");
 		_health = 2000;
@@ -43,6 +48,17 @@ public class BotBoss extends Boss {
 	
 	public void render(GraphicsContext gc) {
 		super.render(gc);
+		if(_counter2 == 0 && !_dead && !_won && !_spawning) {
+			
+			Random r = new Random();
+			int i = r.nextInt(5) + 2;
+			TheGame.setText(new Image("botboss/text/" + i + ".png"));
+		}
+		
+	if(_counter2 == 150) {
+		TheGame.stopText();
+		_counter2 = -500;
+	}
 		if(_health == 0 && !_dead) {
 			_dead = true;
 			_attack1 = false;
@@ -50,10 +66,12 @@ public class BotBoss extends Boss {
 			_attack3 = false;
 			_attack4 = false;
 			_counter2 = 0;
+			TheGame.setText(new Image("botboss/text/dead.png"));
 			_staticimage = new Image("botboss/1.png");
 		}
 		if(_won) {
 			_staticimage = new Image("botboss/won.png");
+			TheGame.setText(new Image("botboss/text/won.png"));
 		}
 		if(_dead) {
 			_attack1 = false;
@@ -71,11 +89,14 @@ public class BotBoss extends Boss {
 			}
 			if(_counter2 == 36) {
 				_yvelocity = 30;
+				TheGame.playSound("/botboss/sounds/move.wav");
 			}
 		}
 		if(_enraged && !_spriteswitched) {
+			TheGame.setText(new Image("botboss/text/mad.png"));
 			_staticimage = new Image("botboss/mad.png");
 			_spriteswitched = true;
+			_counter2 = 1;
 		}
 		if(_spawning) {
 			executeSpawn();
@@ -120,12 +141,28 @@ public class BotBoss extends Boss {
 				if(_repeat4 == 2) {
 					i = 1;
 				}
+				if(_repeatno1 == 5) {
+					i = 0;
+				}
+				if(_repeatno2 == 5) {
+					i = 1;
+				}
+				if(_repeatno3 == 5) {
+					i = 2;
+				}
+				if(_repeatno4 == 5) {
+					i = 3;
+				}
 				if(i == 0) {
 					attack1();
 					_repeat1++;
 					_repeat2 = 0;
 					_repeat3 = 0;
 					_repeat4 = 0;
+					_repeatno1 = 0;
+					_repeatno2++;
+					_repeatno3++;
+					_repeatno4++;
 				}
 				if(i == 1) {
 					attack2();
@@ -133,6 +170,10 @@ public class BotBoss extends Boss {
 					_repeat1 = 0;
 					_repeat3 = 0;
 					_repeat4 = 0;
+					_repeatno1++;
+					_repeatno2=0;
+					_repeatno3++;
+					_repeatno4++;
 				}
 				if(i == 2) {
 					int p = r.nextInt(4);
@@ -174,6 +215,10 @@ public class BotBoss extends Boss {
 					_repeat1 = 0;
 					_repeat2 = 0;
 					_repeat4 = 0;
+					_repeatno1++;
+					_repeatno2++;
+					_repeatno3=0;
+					_repeatno4++;
 				}
 				if(i == 3) {
 					attack4();
@@ -181,6 +226,10 @@ public class BotBoss extends Boss {
 					_repeat1 = 0;
 					_repeat2 = 0;
 					_repeat3 = 0;
+					_repeatno1++;
+					_repeatno2++;
+					_repeatno3++;
+					_repeatno4=0;
 				}
 			}
 		}
@@ -194,11 +243,13 @@ public class BotBoss extends Boss {
 		// resting x = 630
 		_y = 262;
 		_counter2 = 0;
+		TheGame.setText(new Image("botboss/text/" + 1 + ".png"));
 		
 	}
 	public void executeSpawn() {
 		if(_counter2 == 20){
 			_xvelocity = -35;
+			TheGame.playSound("/botboss/sounds/move.wav");
 		}
 		if(_counter2 == 28) {
 			_xvelocity = 0;
@@ -219,35 +270,51 @@ public class BotBoss extends Boss {
 	public void executeAttack1() {
 		if(_counter4 >= 0 && _counter4 < 60) {
 			TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), -150, _y+15, 900, 22);
+			if(_counter4 == 1){
+			TheGame.playSound("/botboss/sounds/charge2.wav");
+			}
 		}
 		if(_counter4 >= 25 && _counter4 < 85) {
 			TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+65,900, 22);
+			if(_counter4 == 25){
+				TheGame.playSound("/botboss/sounds/charge2.wav");
+				}
 		}
 		if(_counter4 >= 50 && _counter4 < 110) {
 			TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+115, 900, 22);
+			if(_counter4 == 50){
+				TheGame.playSound("/botboss/sounds/charge2.wav");
+				}
 		}
 		if(_counter4 >= 75 && _counter4 < 135) {
 			TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+165, 900, 22);
+			if(_counter4 == 75){
+				TheGame.playSound("/botboss/sounds/charge2.wav");
+				}
 		}
 		if(_counter4 == 60) {
 			Hitbox a = new MeleeHitbox("laser1", this, -150, _y+15, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
 		}
 		if(_counter4 == 85) {
 			Hitbox a = new MeleeHitbox("laser2", this, 0, _y+65, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
 		}
 		if(_counter4 == 110) {
 			Hitbox a = new MeleeHitbox("laser3", this, 0, _y+115, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
 		}
 		if(_counter4 == 135) {
 			Hitbox a = new MeleeHitbox("laser4", this, 0, _y+165, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
 		}
 		if(_counter4 == 75) {
 			TheGame.clearHitboxes("laser1", this);
@@ -266,6 +333,9 @@ public class BotBoss extends Boss {
 				TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+65,900, 22);
 				TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+115, 900, 22);
 				TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, _y+165, 900, 22);
+				if(_counter4 == 185){
+					TheGame.playSound("/botboss/sounds/charge.wav");
+					}
 		}
 		if(_counter4 == 245) {
 			Hitbox a = new MeleeHitbox("laser1", this, -150, _y+15, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
@@ -280,6 +350,7 @@ public class BotBoss extends Boss {
 			 a = new MeleeHitbox("laser4", this, 0, _y+165, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
 		}
 		if(_counter4 == 260) {
 			TheGame.clearHitboxes("laser1", this);
@@ -313,6 +384,8 @@ public class BotBoss extends Boss {
 		} else {
 			_staticimage = new Image("botboss/mad2.png");
 		}
+		TheGame.playSound("/botboss/sounds/open.wav");
+		
 		
 	}
 	
@@ -326,9 +399,11 @@ public class BotBoss extends Boss {
 			a.setCircle(true);
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/gear.wav");
 			
 		}
 		if(_enraged && _rage2count < 3 && _counter4 == 30) {
+			System.out.println("enraged?");
 			_counter4 = -20;
 			_rage2count++;
 		}
@@ -339,6 +414,7 @@ public class BotBoss extends Boss {
 			} else {
 			_staticimage = new Image("botboss/1.png");
 			}
+			TheGame.playSound("/botboss/sounds/close.wav");
 			_counter3 = 0;
 			_rage2count = 0;
 			_attack2 = false;
@@ -348,6 +424,7 @@ public class BotBoss extends Boss {
 	public void attack3() {
 		_counter4 = 0;
 		_attack3 = true;
+		
 		if(_enraged) {
 			_staticimage = new Image("botboss/madl.png");
 		} else {
@@ -359,15 +436,20 @@ public class BotBoss extends Boss {
 		
 		if(_counter4 >= 10 && _counter4 <60) {
 			TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, 215, 900, 22);
+			
 			if(_enraged) {
 				TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, 255, 900, 22);
 				TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, 295, 900, 22);
 			}
 		}
+		if(_counter4 == 10) {
+			TheGame.playSound("/botboss/sounds/charge.wav");
+		}
 		if(_counter4 == 60) {
 			 Hitbox a = new MeleeHitbox("laser1", this, 0, 215, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 				a.setDissappearOnHit(false);
 				TheGame._attacks.add(a);
+				TheGame.playSound("/botboss/sounds/shot.wav");
 				if(_enraged){
 				a = new MeleeHitbox("laser1", this, 0, 255, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 				a.setDissappearOnHit(false);
@@ -393,6 +475,10 @@ public class BotBoss extends Boss {
 			if(_3phase == 4){
 				TheGame._gc.drawImage(new Image("botboss/platform.png"), _n, _m);
 			}
+			
+		}
+		if(_counter4 == 120) {
+			TheGame.playSound("/botboss/sounds/rise.wav");
 		}
 		if(_counter4 >= 120 && _counter4 < 129) {
 			_m = _m -10;
@@ -444,6 +530,7 @@ public class BotBoss extends Boss {
 			} else {
 				_staticimage = new Image("botboss/1.png");
 			}
+			
 			_attack3 = false;
 			_counter3 = 0;
 			_3phase = 0;
@@ -499,19 +586,34 @@ public class BotBoss extends Boss {
 	}
 	
 private void makeVLaser(int c, int x, String s) {
+	
+	if(c == 0) {
+		TheGame.playSound("/botboss/sounds/charge1.wav");
+	}
 	if(c < 60) {
 		TheGame._gc.drawImage(new Image("botboss/lasers/vpre.png"), x, 60, 22, 900);
 	}
-	if(c == 60 || c == 61) {
+	if(c == 60 || c == 61 ) {
 		Hitbox a = new MeleeHitbox(s, this, x, 60, 22, 900, 0, 1, new Image("botboss/lasers/v1.png"));
 		a.setDissappearOnHit(false);
 		TheGame._attacks.add(a);
+		if(!_lasershot){
+		TheGame.playSound("/botboss/sounds/shot.wav");
+		_lasershot = true;
+		}
+	}
+	if(c == 62) {
+		_lasershot = false;
 	}
 	if(c == 85 || c == 86) {
 		TheGame.clearHitboxes(s, this);
+		
 	}
 }
 private void makeHLaser(int c, int y, String s) {
+	if(c == 0) {
+		TheGame.playSound("/botboss/sounds/charge1.wav");
+	}
 	if(c < 60) {
 		TheGame._gc.drawImage(new Image("botboss/lasers/hpre.png"), 0, y, 900, 22);
 	}
@@ -519,9 +621,18 @@ private void makeHLaser(int c, int y, String s) {
 		Hitbox a = new MeleeHitbox(s, this, 0, y, 900, 22, 0, 1, new Image("botboss/lasers/h1.png"));
 		a.setDissappearOnHit(false);
 		TheGame._attacks.add(a);
+		TheGame.playSound("/botboss/sounds/shot.wav");
+		if(!_lasershot){
+			TheGame.playSound("/botboss/sounds/shot.wav");
+			_lasershot = true;
+			}
+	}
+	if(c == 62) {
+		_lasershot = false;
 	}
 	if(c == 85 || c == 86) {
 		TheGame.clearHitboxes(s, this);
+		_lasershot = false;
 	}
 }
 

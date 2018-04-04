@@ -148,6 +148,7 @@ public class TheGame extends Application {
 	private Button _lasers = new Button("select");
 	private Button _rock2 = new Button("select");
 	private Button _dragon = new Button("select");
+	private Button _skull = new Button("select");
 	
 	private Button _toot = new Button("fight!");
 	private Button _crush = new Button("fight!");
@@ -156,6 +157,7 @@ public class TheGame extends Application {
 	private Button _laser = new Button("fight!");
 	private Button _crunch = new Button("fight!");
 	private Button _droth = new Button("fight!");
+	private Button _cranius = new Button("fight!");
 	
 	private String _beattoot;
 	private String _beatswurli;
@@ -164,6 +166,7 @@ public class TheGame extends Application {
 	private String _beatlaser;
 	private String _beatcrunch;
 	private String _beatdroth;
+	private String _beatcranius;
 	
 	private static Image _text;
 	
@@ -213,6 +216,7 @@ public class TheGame extends Application {
 			_beatlaser = read(reader);
 			_beatcrunch = read(reader);
 			_beatdroth = read(reader);
+			_beatcranius = read(reader);
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -259,6 +263,8 @@ public class TheGame extends Application {
 					_gc.drawImage(new Image("text/charscreen.png"), 0, 0);
 					int x = 900;
 					int y = 77;
+	if(_beatcranius.equals("f")){
+		x = 650;
 		if(_beatdroth.equals("f")) {	
 			x = 590;
 			if(_beatcrunch.equals("f")){
@@ -280,6 +286,7 @@ public class TheGame extends Application {
 				}
 			}
 		}
+	}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					if (!_root1.getChildren().contains(_white)) {
 						_white.setMinWidth(45);
@@ -371,6 +378,15 @@ public class TheGame extends Application {
 
 						_dragon.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_skull) && _beatcranius.equals("t")) {
+						_skull.setMinWidth(45);
+						_skull.setMinHeight(12);
+						_skull.setLayoutX(664);
+						_skull.setLayoutY(151);
+						_root1.getChildren().add(_skull);
+
+						_skull.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else if(!_bosspicked) {
 					_gc.drawImage(new Image("text/bossscreen.png"), 0, 0);
@@ -385,6 +401,9 @@ public class TheGame extends Application {
 					}
 					int x = 900;
 					int y = 77;
+		if(!_beatdroth.equals("t")) {
+			    x = 0;
+			    y = 183;
 			if(!_beatcrunch.equals("t")){
 				x = 739;
 				if(!_beatlaser.equals("t")){
@@ -403,6 +422,7 @@ public class TheGame extends Application {
 					}
 				}
 			}
+		}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					if (!_root1.getChildren().contains(_toot)) {
 						_toot.setMinWidth(60);
@@ -467,6 +487,15 @@ public class TheGame extends Application {
 
 						_droth.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_cranius) && _beatdroth.equals("t")) {
+						_cranius.setMinWidth(60);
+						_cranius.setMinHeight(25);
+						_cranius.setLayoutX(58);
+						_cranius.setLayoutY(219);
+						_root1.getChildren().add(_cranius);
+
+						_cranius.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else {
 					List<Node> remove = new ArrayList<Node>();
@@ -518,7 +547,7 @@ public class TheGame extends Application {
 						if (a.getCharacter().getID().equals("one")) {
 							_boss.hit(a);
 						} 
-						else if(a.getCharacter().equals(_boss)){
+						else{
 							
 							_character1.hit(a);
 						}
@@ -738,6 +767,14 @@ public void handleKeyRelease(KeyEvent event) {
 			}
 			_beatdroth = "t";
 		}
+		if(_boss.getID().equals("skullboss")){
+			if(_beatcranius.equals("f")){
+				_gotpower = true;
+				_power = "cranium";
+				_newskin = "skull";
+			}
+			_beatcranius = "t";
+		}
 		
 		}
 		BufferedWriter writer = null;
@@ -750,6 +787,7 @@ public void handleKeyRelease(KeyEvent event) {
 			write(writer, _beatlaser);
 			write(writer, _beatcrunch);
 			write(writer, _beatdroth);
+			write(writer, _beatcranius);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -869,6 +907,10 @@ public void handleButtonPress(MouseEvent click) {
 		_skin = "dragon";
 		_charpicked = true;
 	}
+	if(click.getSource().equals(_skull)) {
+		_skin = "skull";
+		_charpicked = true;
+	}
 	
 	
 	
@@ -913,6 +955,10 @@ public void handleButtonPress(MouseEvent click) {
 	}
 	if(click.getSource().equals(_droth)) {
 		_boss = new DragonBoss();
+		_bosspicked = true;
+	}
+	if(click.getSource().equals(_cranius)) {
+		_boss = new SkullBoss();
 		_bosspicked = true;
 	}
 	
@@ -997,6 +1043,14 @@ public void handleButtonPress(MouseEvent click) {
 				}
 				_beatdroth = "t";
 			}
+			if(_boss.getID().equals("skullboss")){
+				if(_beatcranius.equals("f")){
+					_gotpower = true;
+					_power = "cranium";
+					_newskin = "skull";
+				}
+				_beatcranius = "t";
+			}
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter("data.txt"));
@@ -1007,6 +1061,7 @@ public void handleButtonPress(MouseEvent click) {
 			write(writer, _beatlaser);
 			write(writer, _beatcrunch);
 			write(writer, _beatdroth);
+			write(writer, _beatcranius);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

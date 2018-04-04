@@ -176,17 +176,35 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 
 	public boolean checkCollide() {
 		Entity c;
+		Boss c2;
 		if (_character.getID().equals("one")) {
 			c =  TheGame._boss;
+			if(c.getClass().toString().equals("class cd.bosses.SkullBoss")) {
+				c2 = c.getSubBoss();
+			} else {
+				c2 = null;
+			}
+
 		} else {
-		
+			
 			c =  TheGame._character1;
+			c2 = null;
 		}
 		Shape ch;
+		Shape ch2;
 		if(!c.isCircle()) {
 			ch = new Rectangle(c.getX(), c.getY(), c.getWidth(), c.getHeight());
 		} else {
 			ch = new Ellipse(c.getX() + (c.getWidth()/2), c.getY()+(c.getHeight()/2), c.getWidth()/2, c.getHeight()/2);
+		}
+		if(c2 != null) {
+			if(!c2.isCircle()) {
+				ch2 = new Rectangle(c2.getX(), c2.getY(), c2.getWidth(), c2.getHeight());
+			} else {
+				ch2 = new Ellipse(c2.getX() + (c2.getWidth()/2), c2.getY()+(c2.getHeight()/2), c2.getWidth()/2, c2.getHeight()/2);
+			}
+		} else {
+			ch2 = null;
 		}
 		Shape h;
 		if(!_circle){
@@ -195,7 +213,24 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 		 h = new Ellipse(_x + (_width/2), _y + (_height/2), _width/2, _height/2);
 		}
 		Shape intersect = Shape.intersect(ch, h);
+		Shape intersect2;
+		if(ch2 != null) {
+			intersect2 = Shape.intersect(ch2, h);
+		} else {
+			intersect2 = null;
+		}
+		if(intersect2 != null){
+		}
 		if (intersect.getBoundsInLocal().getWidth() != -1) {
+			_collided = true;
+			if (isDissappearOnHit() && !c.isImmune()) {
+				_gone = true;
+			}
+
+			
+			return true;
+		} else if (intersect2 != null && intersect2.getBoundsInLocal().getWidth() != -1) {
+			
 			_collided = true;
 			if (isDissappearOnHit() && !c.isImmune()) {
 				_gone = true;
@@ -203,7 +238,7 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 			
 			return true;
 		} else {
-
+			
 			return false;
 		}
 	}
@@ -312,6 +347,11 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 	
 	public void setCircle(boolean b) {
 		_circle = b;
+	}
+	@Override
+	public Boss getSubBoss() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -31,6 +31,7 @@ abstract public class Boss extends EntityImpl {
 	protected boolean _won;
 	protected boolean _dead;
 	protected boolean _songstopped;
+	protected Boss _subboss;
 	protected List<Image> _sprites = new ArrayList<Image>();
 	// cycles through the sprites
 			protected int _spritecounter = 0;
@@ -111,6 +112,28 @@ abstract public class Boss extends EntityImpl {
 	}
 	public boolean isWon() {
 		return _won;
+	}
+	public Boss getSubBoss() {
+		return _subboss;
+	}
+	public void setXVelocity(double x) {
+		_xvelocity = x;
+	}
+	public void setYVelocity(double y) {
+		_yvelocity = y;
+	}
+
+	public void attack1() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void attack2() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void attack3() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

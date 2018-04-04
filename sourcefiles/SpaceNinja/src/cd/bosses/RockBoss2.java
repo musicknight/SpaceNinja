@@ -358,6 +358,7 @@ public class RockBoss2 extends Boss {
 			if(TheGame._character1.getY() == 392) {
 				TheGame._character1.setCanAct(false);
 				TheGame._character1.setXVelocity(0);
+				TheGame._character1.setYVelocity(0);
 				_stunned = true;
 			}
 		}

@@ -9,6 +9,7 @@ import cd.HitboxImpl;
 import cd.MeleeHitbox;
 import cd.OffsetHitbox;
 import cd.TheGame;
+import cd.bosses.Boss;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -263,6 +264,12 @@ public class Ninja1Char extends CDCharacter {
 		if(c == 33) {
 			TheGame.clearHitboxes(s, this);
 		}
+	}
+
+	@Override
+	public Boss getSubBoss() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

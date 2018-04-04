@@ -1,5 +1,6 @@
 package cd;
 
+import cd.bosses.Boss;
 import javafx.scene.canvas.GraphicsContext;
 
 public interface Entity {
@@ -24,4 +25,6 @@ public interface Entity {
 	public boolean isImmune();
 	
 	public boolean isCircle();
+
+	public Boss getSubBoss();
 }

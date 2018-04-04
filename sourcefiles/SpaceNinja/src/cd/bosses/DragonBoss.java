@@ -47,13 +47,30 @@ public class DragonBoss extends Boss {
 		if(TheGame._character1.getLives() <= 0) {
 			_won = true;
 		}
+		if(_counter2 == 0 && !_dead) {
+			if(_spawning) {
+				TheGame.setText(new Image("dragonboss/text/spawn.png"));
+			} else if(!_dead) {
+				Random r = new Random();
+				int i = r.nextInt(6) + 1;
+				
+				TheGame.setText(new Image("dragonboss/text/" + i + ".png"));
+			} 
+			
+		}
+		if(_counter2 == 150) {
+			TheGame.stopText();
+			_counter2 = -500;
+		}
 		if(_health == 0) {
 			_attack1 = false;
 			_attack2 = false;
 			_attack3 = false;
+			_dead = true;
 			TheGame._attacks.remove(_tail);
 			TheGame._attacks.remove(_tail2);
 			_staticimage = new Image("dragonboss/dead.png");
+			TheGame.setText(new Image("dragonboss/text/dead.png"));
 			_yvelocity = 4;
 		}
 		super.render(gc);
@@ -72,7 +89,10 @@ public class DragonBoss extends Boss {
 		if(!_spriteswitched && _health < 300) {
 			_spriteswitched = true;
 			_staticimage = new Image("dragonboss/mad.png");
+			TheGame.setText(new Image("dragonboss/text/mad.png"));
+			_counter2 = 1;
 		}
+		
 		if(!TheGame._attacks.contains(_body)) {
 			TheGame._attacks.add(_body);
 		}
@@ -82,6 +102,7 @@ public class DragonBoss extends Boss {
 			}
 			if(_won) {
 				_staticimage = new Image("dragonboss/won.png");
+				TheGame.setText(new Image("dragonboss/text/won.png"));
 			}
 			if(_counter1 < 29) {
 				_yvelocity = 0;
@@ -213,6 +234,7 @@ public class DragonBoss extends Boss {
 			Hitbox b = new OffsetHitbox("beam2", this, -437-98, 91-29, 100, 100, 0, 1, new Image("dragonboss/beam/ball.png"));
 			b.setDissappearOnHit(false);
 			b.setCircle(true);
+			TheGame.playSound("/dragonboss/sounds/beam.wav");
 			TheGame._attacks.add(a);
 			TheGame._attacks.add(b);
 		}
@@ -229,6 +251,7 @@ public class DragonBoss extends Boss {
 		if(_counter4 >= 90 && _counter4 % 30 == 0 && _counter4 < 190) {
 			Hitbox a = new HitboxImpl("fireball", this, false,  _x-5, _y+58, 124, 100, -10, 0, 0, 1, new Image("dragonboss/beam/shot.png"));
 			a.setDissappearOnHit(false);
+			TheGame.playSound("/dragonboss/sounds/ball.wav");
 			a.setCircle(true);
 			TheGame._attacks.add(a);
 		}
@@ -256,6 +279,7 @@ public class DragonBoss extends Boss {
 				Hitbox b = new OffsetHitbox("beam2", this, -437-98, 91-29, 100, 100, 0, 1, new Image("dragonboss/beam/ball.png"));
 				b.setDissappearOnHit(false);
 				b.setCircle(true);
+				TheGame.playSound("/dragonboss/sounds/beam.wav");
 				TheGame._attacks.add(a);
 				TheGame._attacks.add(b);
 			}
@@ -276,6 +300,7 @@ public class DragonBoss extends Boss {
 				a.setDissappearOnHit(false);
 				Hitbox b = new OffsetHitbox("beam2", this, -437-98, 91-29, 100, 100, 0, 1, new Image("dragonboss/beam/ball.png"));
 				b.setDissappearOnHit(false);
+				TheGame.playSound("/dragonboss/sounds/beam.wav");
 				b.setCircle(true);
 				TheGame._attacks.add(a);
 				TheGame._attacks.add(b);
@@ -298,6 +323,7 @@ public class DragonBoss extends Boss {
 				Hitbox b = new OffsetHitbox("beam2", this, -437-98, 91-29, 100, 100, 0, 1, new Image("dragonboss/beam/ball.png"));
 				b.setDissappearOnHit(false);
 				b.setCircle(true);
+				TheGame.playSound("/dragonboss/sounds/beam.wav");
 				TheGame._attacks.add(a);
 				TheGame._attacks.add(b);
 			}
@@ -353,11 +379,13 @@ public class DragonBoss extends Boss {
 			a.setDissappearOnHit(false);
 			a.setCircle(true);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/dragonboss/sounds/ball.wav");
 		}
 		if(_counter1 == 101) {
 			_unlocked = true;
 			_yvelocity = 0;
 			_xvelocity = -30;
+			TheGame.playSound("/dragonboss/sounds/tail.wav");
 			
 		}
 		
@@ -414,18 +442,22 @@ public class DragonBoss extends Boss {
 			a.setDissappearOnHit(false);
 			a.setCircle(true);
 			TheGame._attacks.add(a);
+			TheGame.playSound("/dragonboss/sounds/ball.wav");
 		}
-		if(_counter4 >= 10 && _counter4 < 45) {
+		if(_counter4 >= 0 && _counter4 < 45) {
 			TheGame._gc.drawImage(new Image("dragonboss/tail.png"), x, 386, 150, 600);
+			
 			if(_health < 300) {
 				TheGame._gc.drawImage(new Image("dragonboss/tail.png"), y, 386, 150, 600);
 				_drewtail2 = true;
+				
 			}
 		}
 		if(_counter4 == 45) {
 			_tail = new HitboxImpl("tail", this, false, x, 386, 150, 600, 0, -15, 0, 1, new Image("dragonboss/tail.png"));
 			_tail.setDissappearOnHit(false);
 			TheGame._attacks.add(_tail);
+			TheGame.playSound("/dragonboss/sounds/tail.wav");
 			if(_drewtail2) {
 				_tail2 = new HitboxImpl("tail", this, false, y, 386, 150, 600, 0, -15, 0, 1, new Image("dragonboss/tail.png"));
 				_tail2.setDissappearOnHit(false);

@@ -6,6 +6,7 @@ import java.util.List;
 import cd.EntityImpl;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
 import cd.Hitbox;
 import cd.TheGame;
 
@@ -29,6 +30,7 @@ abstract public class Boss extends EntityImpl {
 	protected boolean _immune;
 	protected boolean _won;
 	protected boolean _dead;
+	protected boolean _songstopped;
 	protected List<Image> _sprites = new ArrayList<Image>();
 	// cycles through the sprites
 			protected int _spritecounter = 0;
@@ -60,7 +62,15 @@ abstract public class Boss extends EntityImpl {
 		} else {
 			gc.drawImage(_staticimage, _x, _y, _width, _height);
 		}
-		
+		if(_dead && !_songstopped) {
+			try {
+				TheGame._player.stop();
+			} catch (BasicPlayerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			_songstopped = true;
+		}
 		
 		_x += _xvelocity;
 		_y += _yvelocity;

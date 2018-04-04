@@ -29,6 +29,7 @@ import cd.bosses.DragonBoss;
 import cd.bosses.GhostBoss;
 import cd.bosses.RockBoss;
 import cd.bosses.RockBoss2;
+import cd.bosses.SkullBoss;
 import cd.bosses.SpikeBoss;
 import cd.bosses.TootBoss;
 import cd.chars.Ninja1Char;
@@ -63,7 +64,6 @@ import java.nio.file.Paths;
 
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import kf.Backdrop;
 import kf.characters.BuuChar;
 import kf.characters.CloudChar;
 import kf.characters.EnchantChar;
@@ -109,14 +109,15 @@ public class TheGame extends Application {
 	public static Place _place;
 	private static Canvas _canvas = new Canvas(900, 600);
 	
-
+	private boolean _songplaying;
+	private boolean _vsongplaying;
 	public static GraphicsContext _gc = _canvas.getGraphicsContext2D();
 	private Stage _stage;
 	private Scene _scene;
 	private AnimationTimer _animationTimer;
 	public static Set<Hitbox> _attacks = new HashSet<Hitbox>();
-	public static Set<Backdrop> _backdrops = new HashSet<Backdrop>();
 	public static List<Platform> _platforms = new ArrayList<Platform>();
+	public static List<Backdrop> _backdrops = new ArrayList<Backdrop>();
 	private Image _scroll = new Image("scroll/space.png");
 	private int _scrollc = 0;
 	private boolean _charpicked = false;
@@ -146,6 +147,7 @@ public class TheGame extends Application {
 	private Button _spike = new Button("select");
 	private Button _lasers = new Button("select");
 	private Button _rock2 = new Button("select");
+	private Button _dragon = new Button("select");
 	
 	private Button _toot = new Button("fight!");
 	private Button _crush = new Button("fight!");
@@ -153,6 +155,7 @@ public class TheGame extends Application {
 	private Button _swurli = new Button("fight!");
 	private Button _laser = new Button("fight!");
 	private Button _crunch = new Button("fight!");
+	private Button _droth = new Button("fight!");
 	
 	private String _beattoot;
 	private String _beatswurli;
@@ -160,6 +163,7 @@ public class TheGame extends Application {
 	private String _beatspiball;
 	private String _beatlaser;
 	private String _beatcrunch;
+	private String _beatdroth;
 	
 	private static Image _text;
 	
@@ -170,7 +174,7 @@ public class TheGame extends Application {
 
 	public static double _gravity = 0.8;
 	
-	private static BasicPlayer _player = new BasicPlayer();
+	public static BasicPlayer _player = new BasicPlayer();
 
 	public void start(Stage stage1) {
 		FXMLLoader loader = new
@@ -185,6 +189,7 @@ public class TheGame extends Application {
 		_scene = new Scene(_root1);
 		_scene.setFill(Color.BLACK);
 		stage1.setScene(_scene);
+		_stage.setOnCloseRequest(m::closeWindow);
 		_root1.getChildren().add(_canvas);
 		Platform p = new PlatformImpl(0, 442, 900, 158);
 		p.setImage(new Image("clear.png"));
@@ -207,6 +212,7 @@ public class TheGame extends Application {
 			_beatspiball = read(reader);
 			_beatlaser = read(reader);
 			_beatcrunch = read(reader);
+			_beatdroth = read(reader);
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -246,9 +252,15 @@ public class TheGame extends Application {
 						_continue.setOnMousePressed(m::handleButtonPress);
 					}
 				} else if(!_charpicked) {
+					if(!_songplaying){
+					playStageSong("/songs/theme.mp3");
+					_songplaying = true;
+					}
 					_gc.drawImage(new Image("text/charscreen.png"), 0, 0);
 					int x = 900;
 					int y = 77;
+		if(_beatdroth.equals("f")) {	
+			x = 590;
 			if(_beatcrunch.equals("f")){
 				x = 520;
 				if(_beatlaser.equals("f")){
@@ -267,6 +279,7 @@ public class TheGame extends Application {
 					}
 				}
 			}
+		}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					if (!_root1.getChildren().contains(_white)) {
 						_white.setMinWidth(45);
@@ -349,6 +362,15 @@ public class TheGame extends Application {
 
 						_rock2.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_dragon) && _beatdroth.equals("t")) {
+						_dragon.setMinWidth(45);
+						_dragon.setMinHeight(12);
+						_dragon.setLayoutX(600);
+						_dragon.setLayoutY(151);
+						_root1.getChildren().add(_dragon);
+
+						_dragon.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else if(!_bosspicked) {
 					_gc.drawImage(new Image("text/bossscreen.png"), 0, 0);
@@ -363,6 +385,8 @@ public class TheGame extends Application {
 					}
 					int x = 900;
 					int y = 77;
+			if(!_beatcrunch.equals("t")){
+				x = 739;
 				if(!_beatlaser.equals("t")){
 					x = 610;
 					if(!_beatspiball.equals("t")){
@@ -378,6 +402,7 @@ public class TheGame extends Application {
 						}
 					}
 				}
+			}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					if (!_root1.getChildren().contains(_toot)) {
 						_toot.setMinWidth(60);
@@ -433,6 +458,15 @@ public class TheGame extends Application {
 
 						_crunch.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_droth) && _beatcrunch.equals("t")) {
+						_droth.setMinWidth(60);
+						_droth.setMinHeight(25);
+						_droth.setLayoutX(773);
+						_droth.setLayoutY(129);
+						_root1.getChildren().add(_droth);
+
+						_droth.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else {
 					List<Node> remove = new ArrayList<Node>();
@@ -459,6 +493,9 @@ public class TheGame extends Application {
 				if(!_bossspawned) {
 					_boss.spawn();
 					_bossspawned = true;
+				}
+				for(Backdrop b : _backdrops) {
+					_gc.drawImage(b.getImage(), b.getX(), b.getY(), b.getWidth(), b.getHeight());
 				}
 				_boss.render(_gc);
 				_boss.incrementCounter();
@@ -491,6 +528,7 @@ public class TheGame extends Application {
 						attackstoremove.add(a);
 					}
 				}
+				
 			
 				for (Hitbox a : attackstoremove) {
 					_attacks.remove(a);
@@ -524,9 +562,19 @@ public class TheGame extends Application {
 				}
 				String bosshealth = ("" + _boss.getHealth());
 				_gc.fillText(bosshealth, 620, 35);
+				if(_character1.getLives() <= 0 && !_vsongplaying) {
+						playStageSong("/songs/lose.mp3");
+						_vsongplaying = true;
+				}
 				if(_boss.isDead() || _boss.isWon()){
 					_character1.setImmune(true);
+					if(_boss.isDead() && !_vsongplaying) {
+						playStageSong("/songs/victory.mp3");
+						_vsongplaying = true;
+					}
+					
 					if (!_root1.getChildren().contains(_return)) {
+						
 						_return.setMinWidth(100);
 						_return.setMinHeight(50);
 						_return.setLayoutX(388);
@@ -622,6 +670,14 @@ public void handleKeyRelease(KeyEvent event) {
 	}
 	if (event.getCode().toString().equals("ESCAPE")) {
 		if(_bosspicked) {
+		try {
+			_player.stop();
+		} catch (BasicPlayerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		_songplaying = false;
+		_vsongplaying = false;
 		_charpicked = false;
 		_bosspicked = false;
 		_character1 = null;
@@ -667,12 +723,20 @@ public void handleKeyRelease(KeyEvent event) {
 			_beatlaser = "t";
 		}
 		if(_boss.getID().equals("rockboss2")){
-			if(_beatlaser.equals("f")){
+			if(_beatcrunch.equals("f")){
 				_gotpower = true;
 				_power = "crunch";
 				_newskin = "rock2";
 			}
 			_beatcrunch = "t";
+		}
+		if(_boss.getID().equals("dragonboss")){
+			if(_beatdroth.equals("f")){
+				_gotpower = true;
+				_power = "droth";
+				_newskin = "dragon";
+			}
+			_beatdroth = "t";
 		}
 		
 		}
@@ -685,6 +749,7 @@ public void handleKeyRelease(KeyEvent event) {
 			write(writer, _beatspiball);
 			write(writer, _beatlaser);
 			write(writer, _beatcrunch);
+			write(writer, _beatdroth);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -800,32 +865,53 @@ public void handleButtonPress(MouseEvent click) {
 		_skin = "rock2";
 		_charpicked = true;
 	}
+	if(click.getSource().equals(_dragon)) {
+		_skin = "dragon";
+		_charpicked = true;
+	}
 	
 	
 	
 	
 	// bosses
+	if(_charpicked && _bosspicked) {
+		try {
+			_player.stop();
+		} catch (BasicPlayerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	if(click.getSource().equals(_toot)) {
 		_boss = new TootBoss();
 		_bosspicked = true;
+		
 	}
 	if(click.getSource().equals(_swurli)) {
 		_boss = new GhostBoss();
 		_bosspicked = true;
+		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
 		_boss = new RockBoss();
 		_bosspicked = true;
+		playStageSong("/songs/crush.mp3");
 	}
 	if(click.getSource().equals(_spiball)) {
 		_boss = new SpikeBoss();
 		_bosspicked = true;
+		playStageSong("/songs/spiball.mp3");
 	}
 	if(click.getSource().equals(_laser)) {
 		_boss = new BotBoss();
 		_bosspicked = true;
+		playStageSong("/songs/laser.mp3");
 	}
 	if(click.getSource().equals(_crunch)) {
+		_boss = new RockBoss2();
+		_bosspicked = true;
+	}
+	if(click.getSource().equals(_droth)) {
 		_boss = new DragonBoss();
 		_bosspicked = true;
 	}
@@ -845,7 +931,14 @@ public void handleButtonPress(MouseEvent click) {
 		_charpicked = false;
 		_bosspicked = false;
 		_character1 = null;
-		
+		try {
+			_player.stop();
+		} catch (BasicPlayerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		_songplaying = false;
+		_vsongplaying = false;
 		
 		if(_boss.isDead()){
 			if(_boss.getID().equals("tootboss")){
@@ -896,6 +989,14 @@ public void handleButtonPress(MouseEvent click) {
 				}
 				_beatcrunch = "t";
 			}
+			if(_boss.getID().equals("dragonboss")){
+				if(_beatdroth.equals("f")){
+					_gotpower = true;
+					_power = "droth";
+					_newskin = "dragon";
+				}
+				_beatdroth = "t";
+			}
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter("data.txt"));
@@ -905,6 +1006,7 @@ public void handleButtonPress(MouseEvent click) {
 			write(writer, _beatspiball);
 			write(writer, _beatlaser);
 			write(writer, _beatcrunch);
+			write(writer, _beatdroth);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -959,6 +1061,7 @@ public String read(BufferedReader reader)throws IOException {
 		     return currentLine;
 		
 }
+
 }
 
 

@@ -62,6 +62,9 @@ public class Ninja1Char extends CDCharacter {
 	if(_skin.equals("laser")) {
 		_starcd = 25;
 	}
+	if(_skin.equals("dragon")) {
+		_starcd = 15;
+	}
 	
 	
 	
@@ -133,6 +136,11 @@ public class Ninja1Char extends CDCharacter {
 				_star.setBounces(true);
 				_attack1 = false;
 				TheGame.playSound("/rockboss/sounds/shot.wav");
+			}
+			if(_skin.equals("dragon")){
+				_star = new HitboxImpl("shuriken", this, false, _x+45, _y-6, 62, 50, 9, 0, 0, 20, new Image("dragonboss/beam/shot2.png"));
+				_attack1 = false;
+				TheGame.playSound("/dragonboss/sounds/ball.wav");
 			}
 			if(_star != null){
 			TheGame._attacks.add(_star);

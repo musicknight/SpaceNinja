@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 public class TootBoss extends Boss {
 
 	private boolean _fightstarted;
-	private int _text = 12;
+	private int _text = 1;
 	private int _attack1var;
 	private boolean _raged;
 	

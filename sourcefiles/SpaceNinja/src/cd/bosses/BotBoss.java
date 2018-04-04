@@ -135,7 +135,7 @@ public class BotBoss extends Boss {
 				if(_repeat2 == 2) {
 					i = 2;
 				}
-				if(_repeat3 == 2) {
+				if(_repeat3 == 1) {
 					i = 0;
 				}
 				if(_repeat4 == 2) {

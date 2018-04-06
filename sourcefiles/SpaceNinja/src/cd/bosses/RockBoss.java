@@ -317,15 +317,18 @@ public class RockBoss extends Boss {
 		// easy variant attack ending
 		if(_health > 250) {
 		if(_counter1 == 232) {
-			_yvelocity = -15;;
+			_yvelocity = -15;
 		}
+		
 		if(_counter1 > 232 && _y < 110) {
 			_y=110;
 			_yvelocity = 0;
 			_xvelocity = 15;
+			
 		}
-		if(_counter1 > 232 && _x > 607) {
+		if(_counter1 >= 232 && _x >= 607) {
 			_x = 607;
+			_y = 110;
 			_xvelocity = 0;
 			_unlocked = false;
 			_locked = false;
@@ -367,8 +370,9 @@ public class RockBoss extends Boss {
 			_yvelocity = 0;
 			_xvelocity = 15;
 		}
-		if(_counter1 > 251 && _x > 607) {
+		if(_counter1 > 251 && _x >= 607) {
 			_x = 607;
+			_y = 110;
 			_xvelocity = 0;
 			_unlocked = false;
 			_locked = false;

@@ -29,6 +29,7 @@ public class SkullBoss extends Boss {
 	private Hitbox _line = null;
 	private boolean _changeform;
 	private boolean _stunned;
+	private boolean _hattack2;
 
 	public SkullBoss() {
 		super(900, 600, "skullboss");
@@ -50,6 +51,21 @@ public class SkullBoss extends Boss {
 		if(!TheGame._attacks.contains(_body) && _health > 0) {
 			TheGame._attacks.add(_body);
 		}
+		if(_counter2 == 0 && !_dead) {
+			if(_spawning) {
+				TheGame.setText(new Image("skullboss/text/spawn.png"));
+			} else if(!_dead) {
+				Random r = new Random();
+				int i = r.nextInt(5) + 1;
+				
+				TheGame.setText(new Image("skullboss/text/" + i + ".png"));
+			} 
+			
+		}
+		if(_counter2 == 150) {
+			TheGame.stopText();
+			_counter2 = -500;
+		}
 		
 		if(_spawning) {
 			executeSpawn();
@@ -69,6 +85,29 @@ public class SkullBoss extends Boss {
 		if(_hattack1) {
 			executeHandAttack1();
 		}
+		if(_health == 0 && !_dead) {
+			_attack1 = false;
+			_attack2 = false;
+			_attack3 = false;
+			_hattack1 = false;
+			_hattack2 = false;
+			_dead = true;
+			_yvelocity = 4;
+			_subboss.setDead(true);
+			_subboss.setYVelocity(4);
+			_bd.setImage(new Image("skullboss/dead.png"));
+			TheGame.setText(new Image("skullboss/text/dead.png"));
+			_counter4 = 0;
+		}
+		if(_dead) {
+			if(_counter4 >= 0) {
+				_bd.setY(150+(_counter4*4));
+			}
+		}
+		if(TheGame._character1.getLives()<= 0 && !_won) {
+			_won = true;
+			
+		}
 		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_hattack1 && !_dead&& !_changeform) {
 			if(_counter1 < 29) {
 				_yvelocity = 0;
@@ -82,9 +121,18 @@ public class SkullBoss extends Boss {
 			} else {
 				_counter1 = 0;
 			}
-			if(_health < 500 && !_form2 && !_spawning) {
+			if(_won) {
+				if(!_form2) {
+					_staticimage = new Image("skullboss/won1.png");
+				} else {
+					_bd.setImage(new Image("skullboss/won2.png"));
+				}
+			}
+			if(_health < 500 && !_form2 && !_spawning && !_won) {
 				_changeform = true;
 				_counter4 = 0;
+				TheGame.setText(new Image("skullboss/text/mad.png"));
+				_counter2 = 1;
 			}
 			if(_counter3 == 90 && !_won ) {
 				Random r = new Random();
@@ -92,7 +140,7 @@ public class SkullBoss extends Boss {
 				_counter3 = 0;
 				
 				if(_repeat1 == 2) {
-					i = 3;
+					i = 2;
 				}
 				if(_repeat2 == 2) {
 					i = 1;
@@ -100,9 +148,7 @@ public class SkullBoss extends Boss {
 				if(_repeat3 == 2) {
 					i = 0;
 				}
-				if(_repeat4 == 2) {
-					i = 2;
-				}
+				
 				if(_repeatno1 == 4) {
 					i = 0;
 				}
@@ -111,9 +157,6 @@ public class SkullBoss extends Boss {
 				}
 				if(_repeatno3 == 4) {
 					i = 2;
-				}
-				if(_repeatno4 == 4) {
-					i = 3;
 				}
 				if(i == 0) {
 					attack1();
@@ -142,7 +185,7 @@ public class SkullBoss extends Boss {
 					_repeatno4++;
 				}
 				if(i == 2) {
-					_attack3var = _random.nextInt(4);
+					_attack3var = _random.nextInt(3) + 1;
 					attack3();
 					_repeat3++;
 					_repeat1 = 0;
@@ -190,30 +233,73 @@ public class SkullBoss extends Boss {
 		_yvelocity = 10;
 		_counter4 = 0;
 		_attack1 = true;
+		if(_form2) {
+			_subboss.attack2();
+		}
 	}
 	
 	public void executeAttack1() {
-		if(_counter4 == 35) {
+		if(_counter4 == 45) {
 			_line = new HitboxImpl("line", this, false, 0, 442, 700, 125, 0, -10, 0, 1, new Image("skullboss/bone/line.png"));
 			_line.setDissappearOnHit(false);
 			TheGame._attacks.add(_line);
 		}
-		if(_counter4 == 45) {
+		if(_counter4 == 55) {
 			_line.setYVelocity(0);
 		}
 		if(_counter4 >= 15 && _counter4 <65) {
 			_yvelocity = 0;
 			TheGame._gc.drawImage(new Image("skullboss/bone/pre2.png"), 0, 438);
 		}
-		if(_counter4 == 75) {
+		if(!_form2){
+		if(_counter4 == 85) {
 			_line.setYVelocity(10);
 			_yvelocity = -10;						
 		}
-		if(_counter4 >= 75 && _y<= 110) {
+		if(_counter4 >= 85 && _y<= 110) {
 			_y = 110;
 			_yvelocity = 0;
 			_counter3 = 0;
 			_attack1 = false;
+		}
+		} else {
+			if(_counter4 == 85) {
+				_line.setYVelocity(10);
+				_xvelocity = -5;
+			}
+			if(_counter4 == 90) {
+				_yvelocity = -8;
+			}
+			if(_counter4 == 110) {
+				_yvelocity =8;
+			}
+			if(_counter4 == 130) {
+				_yvelocity = -8;
+			}
+			if(_counter4 == 150) {
+				_yvelocity = 8;
+			}
+			if(_counter4 == 170) {
+				_yvelocity = -8;
+			}
+			if(_counter4 == 190) {
+				_yvelocity = 8;
+			}
+			if(_counter4 == 210) {
+				_yvelocity = -8;
+			}
+			if(_counter4 == 260) {
+				_xvelocity = 0;
+				_y = -200;
+				_x = 661;
+				_yvelocity = 9;
+			}
+			if(_counter4 >= 260 && _y >= 110) {
+				_y = 110;
+				_counter3 = 0;
+				_attack1 = false;
+			}
+			
 		}
 	}
 	public void attack2() {
@@ -271,11 +357,8 @@ public class SkullBoss extends Boss {
 			}
 		}
 		if(_counter4 == 78) {
-			if(_attack3var == 0 ) {
-				Hitbox a = new HitboxImpl("bone", this, true, 0, -90, 750, 150, 0, 0, 0, 1, new Image("skullboss/bone/750.png"));
-				a.setDissappearOnHit(false);
-				TheGame._attacks.add(a);
-			} else if(_attack3var == 1) {
+			
+			 if(_attack3var == 1) {
 				Hitbox a = new HitboxImpl("bone", this, true, 150, -90, 750, 150, 0, 0, 0, 1, new Image("skullboss/bone/750.png"));
 				a.setDissappearOnHit(false);
 				TheGame._attacks.add(a);

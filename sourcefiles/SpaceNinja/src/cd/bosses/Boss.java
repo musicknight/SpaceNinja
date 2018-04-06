@@ -136,4 +136,9 @@ abstract public class Boss extends EntityImpl {
 		
 	}
 
+	public void setDead(boolean b) {
+		_dead = b;
+		
+	}
+
 }

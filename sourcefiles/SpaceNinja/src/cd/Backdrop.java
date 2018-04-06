@@ -39,4 +39,8 @@ public class Backdrop {
 	public void setY(int y) {
 		_y = y;
 	}
+	
+	public void setImage(Image i) {
+		_i = i;
+	}
 }

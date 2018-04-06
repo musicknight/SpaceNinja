@@ -21,11 +21,15 @@ public class SkullLeftHand extends Boss {
 	@Override
 	public void render(GraphicsContext gc) {
 		super.render(gc);
+		
 		if(_spawning) {
 			executeSpawn();
 		}
 		if(_attack1) {
 			executeAttack1();
+		}
+		if(_attack2) {
+			executeAttack2();
 		}
 		if(!TheGame._attacks.contains(_body)) {
 			TheGame._attacks.add(_body);
@@ -105,6 +109,53 @@ public class SkullLeftHand extends Boss {
 			_yvelocity = 0;
 			_counter3 = 0;
 			_attack1 = false;
+		}
+	}
+	
+	public void attack2() {
+		_counter4 = 0;
+		_attack2 = true;
+		_xvelocity = 24;
+	}
+	
+	public void executeAttack2() {
+		if(_counter4 == 15) {
+			_xvelocity = 0;
+		}
+		if(_counter4 == 85) {
+			_xvelocity = -5;
+		}
+		if(_counter4 == 90) {
+			_yvelocity = 8;
+		}
+		if(_counter4 == 110) {
+			_yvelocity = -8;
+		}
+		if(_counter4 == 130) {
+			_yvelocity = 8;
+		}
+		if(_counter4 == 150) {
+			_yvelocity = -8;
+		}
+		if(_counter4 == 170) {
+			_yvelocity = 8;
+		}
+		if(_counter4 == 190) {
+			_yvelocity = -8;
+		}
+		if(_counter4 == 210) {
+			_yvelocity = 8;
+		}
+		if(_counter4 == 260) {
+			_xvelocity = 0;
+			_y = -200;
+			_x = 125;
+			_yvelocity = 9;
+		}
+		if(_counter4 >= 260 && _y >= 110) {
+			_y = 110;
+			_counter3 = 0;
+			_attack2 = false;
 		}
 	}
 

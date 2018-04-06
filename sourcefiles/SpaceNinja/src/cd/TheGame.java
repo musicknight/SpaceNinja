@@ -31,7 +31,9 @@ import cd.bosses.RockBoss;
 import cd.bosses.RockBoss2;
 import cd.bosses.SkullBoss;
 import cd.bosses.SpikeBoss;
+import cd.bosses.SpikeBoss2;
 import cd.bosses.TootBoss;
+import cd.bosses.TwinsBoss;
 import cd.chars.Ninja1Char;
 import cd.chars.CDCharacter;
 import cd.chars.Character;
@@ -401,11 +403,14 @@ public class TheGame extends Application {
 					}
 					int x = 900;
 					int y = 77;
+					int x1 = 900;
+					int y1 = 600;
 		if(!_beatdroth.equals("t")) {
-			    x = 0;
-			    y = 183;
+			    x1 = 0;
+			    y1 = 183;
 			if(!_beatcrunch.equals("t")){
 				x = 739;
+				y = 100;
 				if(!_beatlaser.equals("t")){
 					x = 610;
 					if(!_beatspiball.equals("t")){
@@ -424,6 +429,7 @@ public class TheGame extends Application {
 			}
 		}
 					_gc.drawImage(new Image("text/black.png"), x, y);
+					_gc.drawImage(new Image("text/black.png"), x1, y1);
 					if (!_root1.getChildren().contains(_toot)) {
 						_toot.setMinWidth(60);
 						_toot.setMinHeight(25);
@@ -705,6 +711,7 @@ public void handleKeyRelease(KeyEvent event) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		_backdrops.clear();
 		_songplaying = false;
 		_vsongplaying = false;
 		_charpicked = false;
@@ -952,14 +959,17 @@ public void handleButtonPress(MouseEvent click) {
 	if(click.getSource().equals(_crunch)) {
 		_boss = new RockBoss2();
 		_bosspicked = true;
+		playStageSong("/songs/crunch.mp3");
 	}
 	if(click.getSource().equals(_droth)) {
 		_boss = new DragonBoss();
 		_bosspicked = true;
+		playStageSong("/songs/droth.mp3");
 	}
 	if(click.getSource().equals(_cranius)) {
 		_boss = new SkullBoss();
 		_bosspicked = true;
+		playStageSong("/songs/cranius.mp3");
 	}
 	
 	
@@ -974,6 +984,7 @@ public void handleButtonPress(MouseEvent click) {
 	
 	//return
 	if(click.getSource().equals(_return)) {
+		_backdrops.clear();
 		_charpicked = false;
 		_bosspicked = false;
 		_character1 = null;

@@ -156,4 +156,9 @@ abstract public class Boss extends EntityImpl {
 		
 	}
 
+	public void switchSprites() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

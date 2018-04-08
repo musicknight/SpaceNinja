@@ -27,12 +27,14 @@ public class TwinsBoss extends Boss {
 	private int _attack3var;
 	private boolean _changeform;
 	private boolean _form2;
+	private boolean _attack5;
+	private boolean _attack6;
 	
 	public TwinsBoss() {
 		super(815, 328, "twinsboss");
 		_width = (int)(86 * 0.6);
 		_height = (int)(192*0.6);
-		_health = 510;
+		_health = 1500;
 		_sprites = new ArrayList<Image>();
 		_sprites.add(new Image("twinsboss/a1.png"));
 		_sprites.add(new Image("twinsboss/a2.png"));
@@ -49,6 +51,22 @@ public class TwinsBoss extends Boss {
 		_subboss.render(gc);
 		_subboss.incrementCounter();
 		}
+		if(_counter2 == 0 && !_dead && !_won) {
+			if(!_dead) {
+				Random r = new Random();
+				int i = r.nextInt(6) + 1;
+				if(_form2) {
+					i = r.nextInt(2) + 8;
+				}
+				
+				TheGame.setText(new Image("twinsboss/text/" + i + ".png"));
+			} 
+			
+		}
+		if(_counter2 == 150) {
+			TheGame.stopText();
+			_counter2 = -500;
+		}
 		if(!TheGame._attacks.contains(_body)) {
 			TheGame._attacks.add(_body);
 		}
@@ -61,17 +79,57 @@ public class TwinsBoss extends Boss {
 		if(_attack3) {
 			executeAttack3();
 		}
+		if(_attack4) {
+			executeAttack4();
+		}
+		if(_attack5) {
+			executeAttack5();
+		}
+		if(_attack6) {
+			executeAttack6();
+		}
 		if(_changeform) {
 			changeForm();
 		}
-		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead && !_changeform) {
-			if(_health < 500 && !_changeform && !_form2) {
+		if(_health == 0 && !_dead) {
+			_width =  (int)(192*0.6);
+			_height = (int)(86*0.6);
+			_y+=(int)(106*0.6);
+			_staticimage = new Image("twinsboss/bdead.png");
+			_xvelocity = -16;
+			_dead = true;
+			TheGame.setText(new Image("twinsboss/text/dead.png"));
+		}
+		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_attack6 && !_dead && !_changeform) {
+			if(_health < 600 && !_changeform && !_form2) {
 				_changeform = true;
 				_counter4 = 0;
+				_counter2 = 1;
+				TheGame.setText(new Image("twinsboss/text/7.png"));
+			}
+			if(TheGame._character1.getLives() <= 0 && !_won) {
+				if(!_form2) {
+					_sprites.clear();
+					_sprites.add(new Image("twinsboss/awon1.png"));
+					_sprites.add(new Image("twinsboss/awon2.png"));
+					_subboss.switchSprites();
+					TheGame.setText(new Image("twinsboss/text/won1.png"));
+				} else {
+					_sprites.clear();
+					_sprites.add(new Image("twinsboss/bwin1.png"));
+					_sprites.add(new Image("twinsboss/bwin2.png"));
+					TheGame.setText(new Image("twinsboss/text/won2.png"));
+				}
+				_counter2 = 1;
+				_won = true;
+				
 			}
 			if(_counter3 == 120 && !_won) {
 				
 				int i = _random.nextInt(3);
+				if(_form2) {
+					i = _random.nextInt(2);
+				}
 				_counter3 = 0;
 				
 				if(_repeat1 == 2) {
@@ -82,7 +140,7 @@ public class TwinsBoss extends Boss {
 				}
 				if(_repeat3 == 2) {
 					i = 0;
-				}i = 1;
+				}
 				
 				if(_repeatno1 == 5) {
 					i = 0;
@@ -114,7 +172,7 @@ public class TwinsBoss extends Boss {
 					_attack2var = _random.nextInt(2);
 					attack2();
 					} else {
-						
+					attack5();
 					}
 					_repeat2++;
 					_repeat1 = 0;
@@ -131,7 +189,7 @@ public class TwinsBoss extends Boss {
 					_attack3var = _random.nextInt(2);
 					attack3();
 					} else {
-					
+					attack6();
 					}
 					_repeat3++;
 					_repeat1 = 0;
@@ -150,7 +208,8 @@ public class TwinsBoss extends Boss {
 
 	@Override
 	public void spawn() {
-		// TODO Auto-generated method stub
+		_counter2 = 1;
+		TheGame.setText(new Image("twinsboss/text/spawn.png"));
 		
 	}
 	
@@ -178,7 +237,7 @@ public class TwinsBoss extends Boss {
 	
 	public void attack2() {
 		_attack2 = true;
-		_counter4 = 0;
+		_counter4 = -15;
 		if(_attack2var == 0){
 		_staticimage = new Image("twinsboss/a3.png");
 		}
@@ -392,11 +451,65 @@ public class TwinsBoss extends Boss {
 	public void attack4() {
 		_attack4 = true;
 		_counter4 = 0;
-		_staticimage = new Image("twinsboss/b3.png");
+		_staticimage = new Image("twinsboss/b4.png");
 		
 	}
 	
 	public void executeAttack4() {
+		if(_counter4 >= 30 && _counter4 % 5 == 0 && _counter4 < 85) {
+			Hitbox b = new HitboxImpl("ball", this, false, _x - 75, _y+15, 75, 75, -20, 0, 0, 1, new Image("twinsboss/shots/b1.png"));
+			
+			b.setCircle(true);
+			b.setDissappearOnHit(false);
+			TheGame._attacks.add(b);
+		}
+		if(_counter4 == 90) {
+			_staticimage = null;
+			_counter3 = 50;
+			_attack4 = false;
+		}
+	}
 	
+	public void attack5() {
+		_attack5 = true;
+		_counter4 = 0;
+		_yvelocity = -20;
+	}
+	
+	public void executeAttack5() {
+		if(_counter4 == 5) {
+			_yvelocity = 0;
+			_staticimage = new Image("twinsboss/b4.png");
+		}
+		if(_counter4 >= 25 && _counter4 % 6 == 0 && _counter4 < 80) {
+			Hitbox b = new HitboxImpl("ball", this, false, _x - 75, _y+15, 75, 75, -20, -4, 0, 1, new Image("twinsboss/shots/b1.png"));
+			
+			b.setCircle(true);
+			b.setDissappearOnHit(false);
+			TheGame._attacks.add(b);
+			b = new HitboxImpl("ball", this, false, _x - 75, _y+15, 75, 75, -20, 4, 0, 1, new Image("twinsboss/shots/b1.png"));
+			
+			b.setCircle(true);
+			b.setDissappearOnHit(false);
+			TheGame._attacks.add(b);
+		}
+		if(_counter4 == 90) {
+			_yvelocity = 20;
+		}
+		if(_counter4 == 95) {
+			_yvelocity = 0;
+			_staticimage = null;
+			_counter3 = 50;
+			_attack5 = false;
+		}
+		
+	}
+	
+	public void attack6() {
+		
+	}
+	
+	public void executeAttack6() {
+		
 	}
 }

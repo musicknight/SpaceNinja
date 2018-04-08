@@ -72,7 +72,7 @@ public class Twin2 extends Boss {
 	}
 	
 	public void attack2(int var) {
-		_counter4 = 0;
+		_counter4 = -15;
 		_attack2 = true;
 		if(var == 1){
 		_staticimage = new Image("twinsboss/b3.png");
@@ -165,6 +165,12 @@ public class Twin2 extends Boss {
 	
 	public void exeChangeForm() {
 		
+	}
+	
+	public void switchSprites() {
+		_sprites.clear();
+		_sprites.add(new Image("twinsboss/bwon1.png"));
+		_sprites.add(new Image("twinsboss/bwon2.png"));
 	}
 
 }

@@ -244,6 +244,10 @@ public class TheGame extends Application {
 			private long _last = 0;
 
 			public void handle(long currentNanoTime) {
+				long t = (currentNanoTime - _last);
+				if (t > 50 ) {
+					_last = currentNanoTime;
+				
 				if(_gotpower) {
 					_gc.drawImage(new Image("text/augtext/base.png"), 0, 0);
 					_gc.drawImage(new Image("text/augtext/" + _power + ".png"), 100, 344);
@@ -619,12 +623,8 @@ public class TheGame extends Application {
 						_return.setOnMousePressed(m::handleButtonPress);
 					}
 				}
-				//end
-				long t = (currentNanoTime - _last);
-				
-				if (t > 500000000) {
-					_last = currentNanoTime;
 				}
+				
 				}
 			}
 		};
@@ -942,7 +942,7 @@ public void handleButtonPress(MouseEvent click) {
 		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
-		_boss = new RockBoss();
+		_boss = new TwinsBoss();
 		_bosspicked = true;
 		playStageSong("/songs/crush.mp3");
 	}

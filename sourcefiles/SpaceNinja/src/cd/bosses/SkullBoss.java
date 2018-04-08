@@ -127,6 +127,7 @@ public class SkullBoss extends Boss {
 				} else {
 					_bd.setImage(new Image("skullboss/won2.png"));
 				}
+				TheGame.setText(new Image("skullboss/text/won.png"));
 			}
 			if(_health < 500 && !_form2 && !_spawning && !_won) {
 				_changeform = true;

@@ -141,4 +141,19 @@ abstract public class Boss extends EntityImpl {
 		
 	}
 
+	public void attack2(int var) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void attack3(int var) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void changeForm() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

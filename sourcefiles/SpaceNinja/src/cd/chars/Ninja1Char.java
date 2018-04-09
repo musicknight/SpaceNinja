@@ -36,7 +36,7 @@ public class Ninja1Char extends CDCharacter {
 	_sprites.add(new Image("ninja/" + _skin + "/run2.png"));
 	_sprites.add(new Image("ninja/" + _skin + "/run3.png"));
 	_sprites.add(new Image("ninja/" + _skin + "/run4.png"));
-	if(_skin.equals("sprites") || _skin.equals("black")) {
+	if(_skin.equals("sprites") || _skin.equals("black") || _skin.equals("twins") || _skin.equals("skull")) {
 		_starcd = 7;
 	}
 	if(_skin.equals("red")) {
@@ -83,6 +83,9 @@ public class Ninja1Char extends CDCharacter {
 		if(_dying) {
 			executeDeath();
 		}
+		if(_skin.equals("skull") && _lives == 1) {
+			_starcd = 15;
+		}
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class Ninja1Char extends CDCharacter {
 	public void executeAttack1() {
 		if( _counter == 0 && !_skin.equals("spike")){
 			_cd1 = _starcd;
-			if(_skin.equals("sprites") || _skin.equals("yellow") || _skin.equals("black")){
+			if(_skin.equals("sprites") || _skin.equals("yellow") || _skin.equals("black") || (_skin.equals("skull")&&_lives != 1)){
 				List<Image> i = new ArrayList<Image>();
 				i.add(new Image("ninja/" + _skin + "/star1.png"));
 				i.add(new Image("ninja/" + _skin + "/star2.png"));
@@ -143,8 +146,23 @@ public class Ninja1Char extends CDCharacter {
 				_attack1 = false;
 				TheGame.playSound("/dragonboss/sounds/ball.wav");
 			}
+			if(_skin.equals("twins")) {
+				_star = new HitboxImpl("shuriken", this, false, _x+45, _y+18, 21, 21, 16, 0, 0, 10, new Image("ninja/twins/star1.png"));
+				_star.setCircle(true);
+				Hitbox a = new HitboxImpl("shuriken", this, false, _x-11, _y+22, 11, 11, -16, 0, 0, 6, new Image("ninja/twins/star2.png"));
+				a.setCircle(true);
+				TheGame._attacks.add(a);
+				_attack1 = false;
+				TheGame.playSound("/ninja/sounds/throw.wav");
+			}
+			if(_skin.equals("skull") && _lives == 1){
+				_star = new HitboxImpl("shuriken", this, false, _x+45, _y+3, 30, 42, 16, 0, 0, 23, new Image("ninja/skull/star3.png"));
+				_attack1 = false;
+				TheGame.playSound("/ninja/sounds/throw.wav");
+			}
 			if(_star != null){
 			TheGame._attacks.add(_star);
+			System.out.println("here");
 			}
 		}
 		if(_skin.equals("spike") &&  _counter % 5 == 0) {

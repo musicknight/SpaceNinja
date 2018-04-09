@@ -179,7 +179,7 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 		Boss c2;
 		if (_character.getID().equals("one")) {
 			c =  TheGame._boss;
-			if(c.getClass().toString().equals("class cd.bosses.SkullBoss")) {
+			if(c.getClass().toString().equals("class cd.bosses.SkullBoss") || c.getClass().toString().equals("class cd.bosses.TwinsBoss")) {
 				c2 = c.getSubBoss();
 			} else {
 				c2 = null;
@@ -230,7 +230,7 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 			
 			return true;
 		} else if (intersect2 != null && intersect2.getBoundsInLocal().getWidth() != -1) {
-			
+			System.out.println("here");
 			_collided = true;
 			if (isDissappearOnHit() && !c.isImmune()) {
 				_gone = true;

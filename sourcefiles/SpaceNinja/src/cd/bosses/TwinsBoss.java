@@ -34,7 +34,7 @@ public class TwinsBoss extends Boss {
 		super(815, 328, "twinsboss");
 		_width = (int)(86 * 0.6);
 		_height = (int)(192*0.6);
-		_health = 1500;
+		_health = 1300;
 		_sprites = new ArrayList<Image>();
 		_sprites.add(new Image("twinsboss/a1.png"));
 		_sprites.add(new Image("twinsboss/a2.png"));
@@ -95,6 +95,8 @@ public class TwinsBoss extends Boss {
 			_width =  (int)(192*0.6);
 			_height = (int)(86*0.6);
 			_y+=(int)(106*0.6);
+			_attack5 = false;
+			_attack6 = false;
 			_staticimage = new Image("twinsboss/bdead.png");
 			_xvelocity = -16;
 			_dead = true;
@@ -137,6 +139,9 @@ public class TwinsBoss extends Boss {
 				}
 				if(_repeat2 == 2) {
 					i = 2;
+					if(_form2) {
+						i = 0;
+					}
 				}
 				if(_repeat3 == 2) {
 					i = 0;
@@ -148,8 +153,10 @@ public class TwinsBoss extends Boss {
 				if(_repeatno2 == 5) {
 					i = 1;
 				}
+				if(!_form2){
 				if(_repeatno3 == 5) {
 					i = 2;
+				}
 				}
 				if(i == 0) {
 					if(!_form2){
@@ -223,7 +230,7 @@ public class TwinsBoss extends Boss {
 	
 	public void executeAttack1() {
 		if(_counter4 >= 10 && _counter4 % 70 == 0) {
-			Hitbox a = new HitboxImpl("ball", this, false, _x - 150, _y, 150, 150, -5, 0, 0, 1, new Image("twinsboss/shots/a1.png"));
+			Hitbox a = new HitboxImpl("ball", this, false, _x - 150, _y, 140, 140, -5, 0, 0, 1, new Image("twinsboss/shots/a1.png"));
 			a.setCircle(true);
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
@@ -456,7 +463,7 @@ public class TwinsBoss extends Boss {
 	}
 	
 	public void executeAttack4() {
-		if(_counter4 >= 30 && _counter4 % 5 == 0 && _counter4 < 85) {
+		if(_counter4 >= 30 && _counter4 % 5 == 0 && _counter4 < 96) {
 			Hitbox b = new HitboxImpl("ball", this, false, _x - 75, _y+15, 75, 75, -20, 0, 0, 1, new Image("twinsboss/shots/b1.png"));
 			
 			b.setCircle(true);
@@ -481,7 +488,7 @@ public class TwinsBoss extends Boss {
 			_yvelocity = 0;
 			_staticimage = new Image("twinsboss/b4.png");
 		}
-		if(_counter4 >= 25 && _counter4 % 6 == 0 && _counter4 < 80) {
+		if(_counter4 >= 25 && _counter4 % 6 == 0 && _counter4 < 91) {
 			Hitbox b = new HitboxImpl("ball", this, false, _x - 75, _y+15, 75, 75, -20, -4, 0, 1, new Image("twinsboss/shots/b1.png"));
 			
 			b.setCircle(true);

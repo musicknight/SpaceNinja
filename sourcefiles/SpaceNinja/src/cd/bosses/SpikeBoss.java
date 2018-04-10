@@ -242,7 +242,6 @@ public class SpikeBoss extends Boss{
 		if(_counter2 == 100) {
 			_xvelocity = 0;
 			_spawning = false;
-			System.out.println(_x);
 		}
 	}
 	

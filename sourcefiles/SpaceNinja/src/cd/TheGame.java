@@ -152,6 +152,7 @@ public class TheGame extends Application {
 	private Button _dragon = new Button("select");
 	private Button _skull = new Button("select");
 	private Button _twins = new Button("select");
+	private Button _spike2 = new Button("select");
 	
 	private Button _toot = new Button("fight!");
 	private Button _crush = new Button("fight!");
@@ -162,6 +163,7 @@ public class TheGame extends Application {
 	private Button _droth = new Button("fight!");
 	private Button _cranius = new Button("fight!");
 	private Button _candm = new Button("fight");
+	private Button _spiball2 = new Button("fight");
 	
 	private String _beattoot;
 	private String _beatswurli;
@@ -172,6 +174,7 @@ public class TheGame extends Application {
 	private String _beatdroth;
 	private String _beatcranius;
 	private String _beatcandm;
+	private String _beatspiball2;
 	
 	private static Image _text;
 	
@@ -223,6 +226,7 @@ public class TheGame extends Application {
 			_beatdroth = read(reader);
 			_beatcranius = read(reader);
 			_beatcandm = read(reader);
+			_beatspiball2 = read(reader);
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -274,6 +278,8 @@ public class TheGame extends Application {
 					int x = 900;
 					int y = 77;
 	
+if(_beatspiball2.equals("f")){
+	x = 786;
 if(_beatcandm.equals("f")){
 	 x = 717;
 	if(_beatcranius.equals("f")){
@@ -300,6 +306,7 @@ if(_beatcandm.equals("f")){
 			}
 		}
 	}
+}
 }
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					if (!_root1.getChildren().contains(_white)) {
@@ -410,6 +417,15 @@ if(_beatcandm.equals("f")){
 
 						_twins.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_spike2) && _beatspiball2.equals("t")) {
+						_spike2.setMinWidth(45);
+						_spike2.setMinHeight(12);
+						_spike2.setLayoutX(795);
+						_spike2.setLayoutY(151);
+						_root1.getChildren().add(_spike2);
+
+						_spike2.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else if(!_bosspicked) {
 					_gc.drawImage(new Image("text/bossscreen.png"), 0, 0);
@@ -426,6 +442,9 @@ if(_beatcandm.equals("f")){
 					int y = 77;
 					int x1 = 900;
 					int y1 = 600;
+	if(!_beatcandm.equals("t")){
+		x1 = 256;
+		y1 = 183;
 	if(!_beatcranius.equals("t")){
 			x1 = 147;
 			y1 = 183;
@@ -452,6 +471,7 @@ if(_beatcandm.equals("f")){
 				}
 			}
 		}
+	}
 	}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					_gc.drawImage(new Image("text/black.png"), x1, y1);
@@ -535,6 +555,15 @@ if(_beatcandm.equals("f")){
 						_root1.getChildren().add(_candm);
 
 						_candm.setOnMousePressed(m::handleButtonPress);
+					}
+					if (!_root1.getChildren().contains(_spiball2) && _beatcandm.equals("t")) {
+						_spiball2.setMinWidth(60);
+						_spiball2.setMinHeight(25);
+						_spiball2.setLayoutX(278);
+						_spiball2.setLayoutY(219);
+						_root1.getChildren().add(_spiball2);
+
+						_spiball2.setOnMousePressed(m::handleButtonPress);
 					}
 					
 				} else {
@@ -807,7 +836,7 @@ public void handleKeyRelease(KeyEvent event) {
 		if(_boss.getID().equals("skullboss")){
 			if(_beatcranius.equals("f")){
 				_gotpower = true;
-				_power = "cranius";
+				_power = "cranium";
 				_newskin = "skull";
 			}
 			_beatcranius = "t";
@@ -819,6 +848,14 @@ public void handleKeyRelease(KeyEvent event) {
 				_newskin = "twins";
 			}
 			_beatcandm = "t";
+		}
+		if(_boss.getID().equals("spikeboss2")){
+			if(_beatspiball2.equals("f")){
+				_gotpower = true;
+				_power = "spiball2";
+				_newskin = "spike2";
+			}
+			_beatspiball = "t";
 		}
 		
 		}
@@ -834,6 +871,7 @@ public void handleKeyRelease(KeyEvent event) {
 			write(writer, _beatdroth);
 			write(writer, _beatcranius);
 			write(writer, _beatcandm);
+			write(writer, _beatspiball2);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -961,6 +999,10 @@ public void handleButtonPress(MouseEvent click) {
 		_skin = "twins";
 		_charpicked = true;
 	}
+	if(click.getSource().equals(_spike2)) {
+		_skin = "spike2";
+		_charpicked = true;
+	}
 	
 	
 	
@@ -1018,6 +1060,11 @@ public void handleButtonPress(MouseEvent click) {
 		_boss = new TwinsBoss();
 		_bosspicked = true;
 		playStageSong("/songs/candm.mp3");
+	}
+	if(click.getSource().equals(_spiball2)) {
+		_boss = new SpikeBoss2();
+		_bosspicked = true;
+		playStageSong("/songs/spiball2.mp3");
 	}
 	
 	
@@ -1118,6 +1165,14 @@ public void handleButtonPress(MouseEvent click) {
 				}
 				_beatcandm = "t";
 			}
+			if(_boss.getID().equals("spikeboss2")){
+				if(_beatspiball2.equals("f")){
+					_gotpower = true;
+					_power = "spiball2";
+					_newskin = "spike2";
+				}
+				_beatspiball = "t";
+			}
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter("data.txt"));
@@ -1130,6 +1185,7 @@ public void handleButtonPress(MouseEvent click) {
 			write(writer, _beatdroth);
 			write(writer, _beatcranius);
 			write(writer, _beatcandm);
+			write(writer, _beatspiball2);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

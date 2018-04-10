@@ -26,10 +26,11 @@ public class SpikeBoss2 extends Boss{
 	private int _repeatno2;
 	private int _repeatno3;
 	private int _repeatno4;
+	private Random _random = new Random();
 	
 	public SpikeBoss2() {
 		super(900, 600, "spikeboss2");
-		_health = 1000;
+		_health = 1300;
 		_staticimage = null;
 		_circle = true;
 		_sprites = new ArrayList<Image>();
@@ -49,14 +50,9 @@ public class SpikeBoss2 extends Boss{
 	@Override
 	public void render(GraphicsContext gc) {
 		super.render(gc);
-		if(_counter2 == 0 && !_won) {
-			if(_health >= 300) {
-				TheGame.setText(new Image("spikeboss2/text/1.png"));
-			} else if(_health > 0) {
-				TheGame.setText(new Image("spikeboss2/text/2.png"));
-			} else {
-				TheGame.setText(new Image("spikeboss2/text/3.png"));
-			}
+		if(_counter2 == 0 && !_won && !_dead) {
+			int i = _random.nextInt(7) + 1;
+			TheGame.setText(new Image("spikeboss2/text/" + i + ".png"));
 			
 		}
 		if(_counter2 == 150) {
@@ -85,7 +81,7 @@ public class SpikeBoss2 extends Boss{
 			_sprites.add(new Image("spikeboss2/dead/6.png"));
 		}
 		if(_dead) {
-			
+			TheGame.setText(new Image("spikeboss2/text/dead.png"));
 			_xvelocity = 0;
 			_yvelocity = 2;
 		}
@@ -104,23 +100,13 @@ public class SpikeBoss2 extends Boss{
 		if(_attack4) {
 			executeAttack4();
 		}
-		if(!_spritesswitched && _health < 300) {
-			_sprites.clear();
-			_sprites.add(new Image("spikeboss2/hurt/1.png"));
-			_sprites.add(new Image("spikeboss2/hurt/2.png"));
-			_sprites.add(new Image("spikeboss2/hurt/3.png"));
-			_sprites.add(new Image("spikeboss2/hurt/4.png"));
-			_sprites.add(new Image("spikeboss2/hurt/5.png"));
-			_sprites.add(new Image("spikeboss2/hurt/6.png"));
-			_counter2 = -1;
-			_spritesswitched = true;
-		}
+		
 		if(_attack1 || _attack2 || _attack3 || _attack4 || _attack5) {
 			if(_rate == 1 && _counter3 % 10 == 0) {
 				TheGame.playSound("/spikeboss2/sounds/1spin.wav");
 			}
 		}
-		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead) {
+		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead && !_spawning) {
 		if(_counter1 < 40) {
 			_yvelocity = 0;
 			if(_counter % 3 == 0){
@@ -133,18 +119,10 @@ public class SpikeBoss2 extends Boss{
 		} else {
 			_counter1 = 0;
 		}
-		if(_won){
-			if(!_spritesswitched1) {
-				_sprites.clear();
-				_sprites.add(new Image("spikeboss2/won/1.png"));
-				_sprites.add(new Image("spikeboss2/won/2.png"));
-				_sprites.add(new Image("spikeboss2/won/3.png"));
-				_sprites.add(new Image("spikeboss2/won/4.png"));
-				_sprites.add(new Image("spikeboss2/won/5.png"));
-				_sprites.add(new Image("spikeboss2/won/6.png"));
-				_spritesswitched1 = true;
-			}
+		if(_won) {
+			TheGame.setText(new Image("spikeboss2/text/won.png"));
 		}
+		
 		if(_counter3 == 120 && !_won) {
 			Random r = new Random();
 			int i = r.nextInt(4);
@@ -186,7 +164,7 @@ public class SpikeBoss2 extends Boss{
 				_repeatno4++;
 			}
 			if(i == 1) {
-				_attack2var = r.nextInt(2);
+				_attack2var = _random.nextInt(2);
 				attack2();
 				_repeat2++;
 				_repeat1 = 0;
@@ -209,7 +187,7 @@ public class SpikeBoss2 extends Boss{
 				_repeatno4++;
 			}
 			if(i == 3) {
-				_attack4var = r.nextInt(2);
+				_attack4var = 0;
 				attack4();
 				_repeat4++;
 				_repeat1 = 0;
@@ -230,19 +208,25 @@ public class SpikeBoss2 extends Boss{
 	@Override
 	public void spawn() {
 		_spawning = true;
-		_counter2 = 0;
-		_x = 910;
-		_y = 110;
+		_counter2 = 1;
+		TheGame.setText(new Image("spikeboss2/text/spawn.png"));
+		_x = 607;
+		_y = 600;
+		_immune = true;
 		// resting _x is 607
-		_xvelocity = -3;
+		_yvelocity = -3;
 		
 	}
 	
 	public void executeSpawn(){
-		if(_counter2 == 100) {
-			_xvelocity = 0;
+		if(_y <= 110) {
+			_immune = false;
+			_y = 110;
+			_yvelocity = 0;
 			_spawning = false;
-			System.out.println(_x);
+			_counter3 = 40;
+			_counter2 = 1;
+			TheGame.setText(new Image("spikeboss2/text/spawn2.png"));
 		}
 	}
 	
@@ -254,16 +238,15 @@ public class SpikeBoss2 extends Boss{
 	public void executeAttack1() {
 		if(_counter4 > 20 && _counter4 % 5 == 0) {
 
-				TheGame.playSound("/spikeboss2/sounds/shot.wav");
+			TheGame.playSound("/spikeboss2/sounds/shot.wav");
 			Hitbox a = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -15, 15, 0, 1, new Image("spikeboss2/spikes/downl.png"));
 			TheGame._attacks.add(a);
-			if(_health < 300) {
-				Hitbox b = new HitboxImpl("spike", this, false, _x+100-24, _y+150, 48, 37, 0, 21, 0, 1, new Image("spikeboss2/spikes/down.png"));
-				TheGame._attacks.add(b);
-				Hitbox c = new HitboxImpl("spike", this, false, _x+30, _y+80, 37, 48, -21, -5, 0, 1, new Image("spikeboss2/spikes/left.png"));
-				TheGame._attacks.add(c);
+			Hitbox b = new HitboxImpl("spike", this, false, _x+100-24, _y+150, 48, 37, 0, 21, 0, 1, new Image("spikeboss2/spikes/down.png"));
+			TheGame._attacks.add(b);
+			Hitbox c = new HitboxImpl("spike", this, false, _x+30, _y+80, 37, 48, -21, 0, 0, 1, new Image("spikeboss2/spikes/left.png"));
+			TheGame._attacks.add(c);
 				
-			}
+		
 		}
 		if(_counter4 == 80) {
 			_xvelocity = -20;
@@ -291,18 +274,24 @@ public class SpikeBoss2 extends Boss{
 	}
 	public void executeAttack2() {
 		int i = 20;
+		if(_counter4 % 4 == 0) {
+		Hitbox z = new HitboxImpl("spike", this, false, _x+15, _y+80, 37, 48, -21, 0, 0, 1, new Image("spikeboss2/spikes/left.png"));
+		TheGame._attacks.add(z);
+		Hitbox v = new HitboxImpl("spike", this, false, _x+170, _y+80, 37, 48, 21, 0, 0, 1, new Image("spikeboss2/spikes/right.png"));
+		TheGame._attacks.add(v);
+		TheGame.playSound("/spikeboss2/sounds/shot.wav");
+		}
+		
 		if(_counter1 > 15 && _counter1 < 55 && _counter1 % 4 == 0) {
-
-				TheGame.playSound("/spikeboss2/sounds/shot.wav");
+			Hitbox b = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -15, 25, 0, 1, new Image("spikeboss2/spikes/downl.png"));
+			TheGame._attacks.add(b);
+			Hitbox c = new HitboxImpl("spike", this, false, _x+124, _y+112, 44, 44, 15, 25, 0, 1, new Image("spikeboss2/spikes/downr.png"));
+			TheGame._attacks.add(c);
+			b = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -15, 12, 0, 1, new Image("spikeboss2/spikes/downl.png"));
+			TheGame._attacks.add(b);
+			c = new HitboxImpl("spike", this, false, _x+124, _y+112, 44, 44, 15, 12, 0, 1, new Image("spikeboss2/spikes/downr.png"));
+			TheGame._attacks.add(c);
 			
-			Hitbox a = new HitboxImpl("spike", this, false, _x+100-24, _y+160, 48, 37, 0, 15, 0, 1, new Image("spikeboss2/spikes/down.png"));
-			TheGame._attacks.add(a);
-			if(_health < 300) {
-				Hitbox b = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -15, 15, 0, 1, new Image("spikeboss2/spikes/downl.png"));
-				TheGame._attacks.add(b);
-				Hitbox c = new HitboxImpl("spike", this, false, _x+124, _y+112, 44, 44, 15, 15, 0, 1, new Image("spikeboss2/spikes/downr.png"));
-				TheGame._attacks.add(c);
-			}
 		}
 		if(_attack2var == 0){
 		if(_counter4 == 30) {
@@ -425,20 +414,7 @@ public class SpikeBoss2 extends Boss{
 		if(_counter4 == 85) {
 			_xvelocity = -30;
 		}
-		if(_health >= 300){
-		if(_counter4 == 120) {
-			_y = 110;
-			_xvelocity = 30;
-			TheGame.playSound("/spikeboss2/sounds/dash2.wav");
-		}
-		if(_counter4 > 120 && _x >= 607) {
-			_x = 607;
-			_rate = 3;
-			_xvelocity = 0;
-			_counter3 = 0;
-			_attack3 = false;
-		}
-		} else {
+		
 			if(_counter4 == 120) {
 				_xvelocity = 30;
 				TheGame.playSound("/spikeboss2/sounds/dash2.wav");
@@ -452,6 +428,11 @@ public class SpikeBoss2 extends Boss{
 				_xvelocity = 30;
 				TheGame.playSound("/spikeboss2/sounds/dash2.wav");
 			}
+			if(_counter4 >= 260 && _counter4 % 3 == 0) {
+				Hitbox b = new HitboxImpl("spike", this, false, _x+100-24, _y+150, 48, 37, 0, 21, 0, 1, new Image("spikeboss2/spikes/down.png"));
+				TheGame._attacks.add(b);
+				TheGame.playSound("/spikeboss2/sounds/shot.wav");
+			}
 			if(_counter4 >= 260 && _x >=607) {
 				_x = 607;
 				_rate = 3;
@@ -459,8 +440,8 @@ public class SpikeBoss2 extends Boss{
 				_counter3 = 0;
 				_attack3 = false;
 			}
-		}
-	}
+			
+				}
 	
 	public void attack4() {
 		_xvelocity = -10;
@@ -473,17 +454,27 @@ public class SpikeBoss2 extends Boss{
 			_xvelocity = 0;
 			_rate = 1;
 		}
-		if(_counter4 >= 40 && _counter4 % 4 == 0 && _counter4 < 250) {
-
+		if(_counter4 >= 40 && _counter1 >= 10 && _counter1 % 4 == 0 && _counter4 < 250) {
+			if(_counter1 >= 0 && _counter1 < 30){
 				TheGame.playSound("/spikeboss2/sounds/shot.wav");
-			
-			Hitbox a = new HitboxImpl("spike", this, false, _x+100-24, _y+160, 48, 37, 0, 15, 0, 1, new Image("spikeboss2/spikes/down.png"));
-			TheGame._attacks.add(a);
-			
+				Hitbox a = new HitboxImpl("spike", this, false, _x+100-24, _y+160, 48, 37, 0, 15, 0, 1, new Image("spikeboss2/spikes/down.png"));
+				TheGame._attacks.add(a);
 				Hitbox b = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -25, 15, 0, 1, new Image("spikeboss2/spikes/downl.png"));
 				TheGame._attacks.add(b);
 				Hitbox c = new HitboxImpl("spike", this, false, _x+124, _y+112, 44, 44, 25, 15, 0, 1, new Image("spikeboss2/spikes/downr.png"));
 				TheGame._attacks.add(c);
+			}
+			if(_counter1 >= 45 && _counter1 < 75) {
+				TheGame.playSound("/spikeboss2/sounds/shot.wav");
+				Hitbox b = new HitboxImpl("spike", this, false, _x+23, _y+112, 44, 44, -15, 25, 0, 1, new Image("spikeboss2/spikes/downl.png"));
+				TheGame._attacks.add(b);
+				Hitbox c = new HitboxImpl("spike", this, false, _x+124, _y+112, 44, 44, 15, 25, 0, 1, new Image("spikeboss2/spikes/downr.png"));
+				TheGame._attacks.add(c);
+			}
+			
+		}
+		if(_counter1 == 75) {
+			_counter1 = 0;
 		}
 		if(_counter4 == 60) {
 			if(_attack4var == 0) {
@@ -491,6 +482,9 @@ public class SpikeBoss2 extends Boss{
 			} else {
 				_xvelocity = 6;
 			}
+		}
+		if(_counter4 == 39) {
+			_counter1 = 10;
 		}
 		if(_counter4 == 110) {
 			_xvelocity = 0;

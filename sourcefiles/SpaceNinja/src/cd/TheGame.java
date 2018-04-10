@@ -192,7 +192,7 @@ public class TheGame extends Application {
 		 FXMLLoader(this.getClass().getResource("watchout.fxml"));
 		 loader.setController(this);
 		
-		stage1.setTitle("Chasedown");
+		stage1.setTitle("SpaceNinja");
 		_stage = stage1;
 		TheGame m = this;
 		//_stage.setOnCloseRequest(m::closeWindow);

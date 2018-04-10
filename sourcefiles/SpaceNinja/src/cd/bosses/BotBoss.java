@@ -261,7 +261,7 @@ public class BotBoss extends Boss {
 	public void attack1() {
 		_attack1 = true;
 		_counter4 = 0;
-		if(_health < 400) {
+		if(_enraged) {
 			_staticimage = new Image("botboss/madl.png");
 		} else {
 			_staticimage = new Image("botboss/1l.png");

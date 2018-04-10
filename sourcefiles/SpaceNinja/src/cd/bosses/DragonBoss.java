@@ -121,7 +121,7 @@ public class DragonBoss extends Boss {
 				_counter3 = 0;
 				
 				if(_repeat1 == 2) {
-					i = 3;
+					i = 1;
 				}
 				if(_repeat2 == 2) {
 					i = 2;
@@ -130,16 +130,15 @@ public class DragonBoss extends Boss {
 					i = 0;
 				}
 				
-				if(_repeatno1 == 5) {
+				if(_repeatno1 == 4) {
 					i = 0;
 				}
-				if(_repeatno2 == 5) {
+				if(_repeatno2 == 4) {
 					i = 1;
 				}
-				if(_repeatno3 == 5) {
+				if(_repeatno3 == 4) {
 					i = 2;
 				}
-				
 				if(i == 0) {
 					
 					_attack1var = _random.nextInt(2);
@@ -175,17 +174,6 @@ public class DragonBoss extends Boss {
 					_repeatno2++;
 					_repeatno3=0;
 					_repeatno4++;
-				}
-				if(i == 3) {
-					//attack4();
-					_repeat4++;
-					_repeat1 = 0;
-					_repeat2 = 0;
-					_repeat3 = 0;
-					_repeatno1++;
-					_repeatno2++;
-					_repeatno3++;
-					_repeatno4=0;
 				}
 			}
 		}
@@ -372,7 +360,7 @@ public class DragonBoss extends Boss {
 		}
 		int i = 30;
 		if(_health < 300) {
-			i = 15;
+			i =30;
 		}
 		if(_counter1 < 101 && _counter1 % i == 0) {
 			Hitbox a = new HitboxImpl("fireball", this, false,  _x-5, _y+58, 124, 100, -18, 0, 0, 1, new Image("dragonboss/beam/shot.png"));
@@ -407,6 +395,7 @@ public class DragonBoss extends Boss {
 		}
 		if(_counter1 > 170 && _y <= 110) {
 			_y=110;
+			_x = 506;
 			_yvelocity = 0;
 			_unlocked = false;
 			_locked = false;

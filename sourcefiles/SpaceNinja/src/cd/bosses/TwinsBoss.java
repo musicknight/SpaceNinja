@@ -229,13 +229,13 @@ public class TwinsBoss extends Boss {
 	}
 	
 	public void executeAttack1() {
-		if(_counter4 >= 10 && _counter4 % 70 == 0) {
+		if(_counter4 >= 10 && _counter4 % 70 == 0 && _counter4 <= 300) {
 			Hitbox a = new HitboxImpl("ball", this, false, _x - 150, _y, 140, 140, -5, 0, 0, 1, new Image("twinsboss/shots/a1.png"));
 			a.setCircle(true);
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
 		}
-		if(_counter4 == 300) {
+		if(_counter4 == 350) {
 			_attack1 = false;
 			_counter3 = 0;
 			_staticimage = null;

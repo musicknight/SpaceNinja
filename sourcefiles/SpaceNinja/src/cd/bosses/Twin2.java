@@ -59,7 +59,7 @@ public class Twin2 extends Boss {
 		_staticimage = new Image("twinsboss/b3.png");
 	}
 	public void executeAttack1() {
-		if(_counter4 >= 10 && _counter4 % 70 == 0) {
+		if(_counter4 >= 10 && _counter4 % 70 == 0&& _counter4 <= 300) {
 			Hitbox a = new HitboxImpl("ball", this, false, _x +_width, _y, 140, 140, 5, 0, 0, 1, new Image("twinsboss/shots/b1.png"));
 			a.setCircle(true);
 			a.setDissappearOnHit(false);

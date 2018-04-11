@@ -66,6 +66,9 @@ public class Ninja1Char extends CDCharacter {
 	if(_skin.equals("dragon")) {
 		_starcd = 15;
 	}
+	if(_skin.equals("spike2")) {
+		_starcd = 10;
+	}
 	
 	
 	
@@ -160,9 +163,18 @@ public class Ninja1Char extends CDCharacter {
 				_attack1 = false;
 				TheGame.playSound("/ninja/sounds/throw.wav");
 			}
+			if(_skin.equals("spike2")){
+				_star = new HitboxImpl("shuriken", this, false, _x+45, _y+1, 37, 48, 15, 0, 0, 7, new Image("spikeboss2/spikes/right.png"));
+				Hitbox a = new HitboxImpl("shuriken", this, false, _x+45, _y+1, 44, 44, 10, -10, 0, 7, new Image("spikeboss2/spikes/upr.png"));
+				Hitbox b = new HitboxImpl("shuriken", this, false, _x+45, _y+1, 44, 44, 10, 10, 0, 7, new Image("spikeboss2/spikes/downr.png"));
+				_attack1 = false;
+				TheGame.playSound("/spikeboss/sounds/shot.wav");
+				TheGame._attacks.add(a);
+				TheGame._attacks.add(b);
+			}
+			
 			if(_star != null){
 			TheGame._attacks.add(_star);
-			System.out.println("here");
 			}
 		}
 		if(_skin.equals("spike") &&  _counter % 5 == 0) {
@@ -198,7 +210,7 @@ public class Ninja1Char extends CDCharacter {
 		}
 		_xvelocity = 18;
 		_cd1 = 10;
-		_cd2 = 50;
+		_cd2 = 30;
 		_yvelocity = 0;
 		_gravity = false;
 		
@@ -288,6 +300,10 @@ public class Ninja1Char extends CDCharacter {
 	public Boss getSubBoss() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public String getSkin() {
+		return _skin;
 	}
 
 	

@@ -667,6 +667,8 @@ public abstract class CharacterImpl extends EntityImpl implements Character {
 		_image = i;
 	}
 	
+	abstract public String getSkin();
+	
 	
 	
 }

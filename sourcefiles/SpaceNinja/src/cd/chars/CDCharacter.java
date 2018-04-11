@@ -41,7 +41,6 @@ public abstract class CDCharacter extends CharacterImpl {
 		_immune = true;
 		_abcounter = 0;
 		_savedim = _image;
-		System.out.println("here");
 		} else {
 			_lives--;
 			_dying = true;
@@ -110,6 +109,10 @@ public abstract class CDCharacter extends CharacterImpl {
 	
 	public void setImmune(boolean  b) {
 		_immune = b;
+	}
+	
+	public void setLives(int i) {
+		_lives = i;
 	}
 
 }

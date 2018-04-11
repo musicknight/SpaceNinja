@@ -25,6 +25,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import cd.bosses.Boss;
 import cd.bosses.BotBoss;
+import cd.bosses.DemonBoss;
 import cd.bosses.DragonBoss;
 import cd.bosses.GhostBoss;
 import cd.bosses.RockBoss;
@@ -1019,6 +1020,7 @@ public void handleButtonPress(MouseEvent click) {
 	if(click.getSource().equals(_toot)) {
 		_boss = new TootBoss();
 		_bosspicked = true;
+		playStageSong("/songs/toot.mp3");
 		
 	}
 	if(click.getSource().equals(_swurli)) {
@@ -1027,7 +1029,7 @@ public void handleButtonPress(MouseEvent click) {
 		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
-		_boss = new RockBoss();
+		_boss = new DemonBoss();
 		_bosspicked = true;
 		playStageSong("/songs/crush.mp3");
 	}

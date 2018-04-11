@@ -69,6 +69,7 @@ public class SpikeBoss2 extends Boss{
 			_attack1 = false;
 			_attack2 = false;
 			_attack3 = false;
+			_attack4 = false;
 			_counter2 = -1;
 			_dead = true;
 			_rate = 8;

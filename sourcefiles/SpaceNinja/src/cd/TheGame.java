@@ -282,8 +282,10 @@ public class TheGame extends Application {
 					_gc.drawImage(new Image("text/charscreen.png"), 0, 0);
 					int x = 900;
 					int y = 77;
+					int x1 = 0;
+					int y1 = 600;
 if(_beatnero.equals("f")){
-	
+	y1 = 185;
 if(_beatspiball2.equals("f")){
 	x = 786;
 if(_beatcandm.equals("f")){
@@ -316,6 +318,7 @@ if(_beatcandm.equals("f")){
 }
 }
 					_gc.drawImage(new Image("text/black.png"), x, y);
+					_gc.drawImage(new Image("text/black.png"), x1, y1);
 					if (!_root1.getChildren().contains(_white)) {
 						_white.setMinWidth(45);
 						_white.setMinHeight(12);
@@ -437,7 +440,7 @@ if(_beatcandm.equals("f")){
 						_demon.setMinWidth(45);
 						_demon.setMinHeight(12);
 						_demon.setLayoutX(46);
-						_demon.setLayoutY(211);
+						_demon.setLayoutY(235);
 						_root1.getChildren().add(_demon);
 
 						_demon.setOnMousePressed(m::handleButtonPress);
@@ -884,7 +887,7 @@ public void handleKeyRelease(KeyEvent event) {
 				_power = "spiball2";
 				_newskin = "spike2";
 			}
-			_beatspiball = "t";
+			_beatspiball2 = "t";
 		}
 		if(_boss.getID().equals("demonboss")){
 			if(_beatnero.equals("f")){
@@ -1220,7 +1223,7 @@ public void handleButtonPress(MouseEvent click) {
 					_power = "spiball2";
 					_newskin = "spike2";
 				}
-				_beatspiball = "t";
+				_beatspiball2 = "t";
 			}
 			if(_boss.getID().equals("demonboss")){
 				if(_beatnero.equals("f")){

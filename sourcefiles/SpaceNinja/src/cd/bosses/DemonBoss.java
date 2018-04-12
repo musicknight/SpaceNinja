@@ -490,14 +490,14 @@ public class DemonBoss extends Boss {
 	}
 	public void attack3() {
 		_attack3 = true;
-		_counter4 = 0;
+		_counter4 = -20;
 	}
 	
 	public void executeAttack3() {
 		int x = TheGame._character1.getX();
 		int y = TheGame._character1.getY();
-		if(_counter4 >= 0 && _counter4 < 30) {
-			TheGame._gc.drawImage(new Image("demonboss/big/pre1.png"), x-65, y-65);
+		if(_counter4 < 30) {
+			TheGame._gc.drawImage(new Image("demonboss/big/pre2.png"), x-65, y-65);
 		}
 		if(_counter4 == 30) {
 			_charx = x;

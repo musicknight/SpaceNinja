@@ -36,7 +36,7 @@ public class Ninja1Char extends CDCharacter {
 	_sprites.add(new Image("ninja/" + _skin + "/run2.png"));
 	_sprites.add(new Image("ninja/" + _skin + "/run3.png"));
 	_sprites.add(new Image("ninja/" + _skin + "/run4.png"));
-	if(_skin.equals("sprites") || _skin.equals("black") || _skin.equals("twins") || _skin.equals("skull")) {
+	if(_skin.equals("sprites") || _skin.equals("black") || _skin.equals("twins") || _skin.equals("skull") || _skin.equals("demon")) {
 		_starcd = 7;
 	}
 	if(_skin.equals("red")) {
@@ -108,7 +108,7 @@ public class Ninja1Char extends CDCharacter {
 	public void executeAttack1() {
 		if( _counter == 0 && !_skin.equals("spike")){
 			_cd1 = _starcd;
-			if(_skin.equals("sprites") || _skin.equals("yellow") || _skin.equals("black") || (_skin.equals("skull")&&_lives != 1)){
+			if(_skin.equals("sprites") || _skin.equals("yellow") || _skin.equals("black") || (_skin.equals("skull")&&_lives != 1) || _skin.equals("demon")){
 				List<Image> i = new ArrayList<Image>();
 				i.add(new Image("ninja/" + _skin + "/star1.png"));
 				i.add(new Image("ninja/" + _skin + "/star2.png"));
@@ -304,6 +304,29 @@ public class Ninja1Char extends CDCharacter {
 	
 	public String getSkin() {
 		return _skin;
+	}
+	
+	@Override
+public void executeAttackBoost() {
+		
+		if(_abcounter % 4 == 0 || _abcounter % 4 == 1) {
+			_image = _clear;
+		} else {
+			_image = _savedim;
+		}
+		if(!_skin.equals("demon")){
+		if(_abcounter == 50) {
+			_immune = false;
+			_attackboost = false;
+			_image = _savedim;
+		}
+		} else {
+			if(_abcounter == 85) {
+				_immune = false;
+				_attackboost = false;
+				_image = _savedim;
+			}
+		}
 	}
 
 	

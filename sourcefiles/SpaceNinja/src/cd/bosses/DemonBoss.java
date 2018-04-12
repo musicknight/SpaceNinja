@@ -31,7 +31,7 @@ public class DemonBoss extends Boss {
 		super(900, 600, "demonboss");
 		_width = (int)(263*(0.8));
 		_height = (int)(268*(0.8));
-		_health = 1200;
+		_health = 1300;
 		_staticimage = new Image("demonboss/1.png");
 		_circle = true;
 		_body = new CharLinkedHitbox("demonbody", this, 0, 1);
@@ -41,8 +41,21 @@ public class DemonBoss extends Boss {
 
 	@Override
 	public void render(GraphicsContext gc) {
+		if(!_dead){
 		TheGame._gc.drawImage(new Image("demonboss/horns.png"), _x, _y-105, (int)(263*.8), 160);
+		} else {
+			TheGame._gc.drawImage(new Image("demonboss/horns2.png"), _x, _y-105, (int)(263*.8), 160);
+		}
 		super.render(gc);
+		if(_counter2 == 0 && !_won && !_dead) {
+			int i = _random.nextInt(6) + 1;
+			TheGame.setText(new Image("demonboss/text/" + i + ".png"));
+			
+		}
+		if(_counter2 == 150) {
+			TheGame.stopText();
+			_counter2 = -500;
+		}
 		if(!TheGame._attacks.contains(_body)) {
 			TheGame._attacks.add(_body);
 		}
@@ -58,6 +71,26 @@ public class DemonBoss extends Boss {
 		if(_attack3) {
 			executeAttack3();
 		}
+		if(_attack4) {
+			executeAttack4();
+		}
+		if(TheGame._character1.getLives() <= 0) {
+			_won = true;
+		}
+		if(_health == 0 && !_dead) {
+			_attack1 = false;
+			_attack2 = false;
+			_attack3 = false;
+			_attack4 = false;
+			_counter2 = -1;
+			_dead = true;
+			_staticimage = new Image("demonboss/dead.png");
+		}
+		if(_dead) {
+			TheGame.setText(new Image("demonboss/text/dead.png"));
+			_xvelocity = 0;
+			_yvelocity = 3;
+		}
 		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead && !_spawning) {
 		if(_counter1 < 29) {
 			_yvelocity = 0;
@@ -71,9 +104,18 @@ public class DemonBoss extends Boss {
 		} else {
 			_counter1 = 0;
 		}
+		if(_won) {
+			if(!TheGame._character1.getSkin().equals("black")) {
+				TheGame.setText(new Image("demonboss/text/won.png"));
+			} else {
+				TheGame.setText(new Image("demonboss/text/kill.png"));
+			}
+			
+			_staticimage = new Image("demonboss/won.png");
+		}
 		if(_counter3 == 120 && !_won) {
 			Random r = new Random();
-			int i = r.nextInt(3);
+			int i = r.nextInt(4);
 			_counter3 = 0;
 			
 			if(_repeat1 == 2) {
@@ -136,7 +178,7 @@ public class DemonBoss extends Boss {
 				_repeatno4++;
 			}
 			if(i == 3) {
-				//attack4();
+				attack4();
 				_repeat4++;
 				_repeat1 = 0;
 				_repeat2 = 0;
@@ -161,9 +203,14 @@ public class DemonBoss extends Boss {
 		_spawning = true;
 		_x = 348;
 		_y = 0;
+		if(TheGame._character1.getSkin().equals("black")) {
+			TheGame.setText(new Image("demonboss/text/kill.png"));
+		} else {
+			TheGame.setText(new Image("demonboss/text/spawn.png"));
+		}
 		// resting y = 108
 		_yvelocity = 3;
-		_counter2 = 0;
+		_counter2 = 1;
 	}
 	
 	public void executeSpawn() {
@@ -476,6 +523,50 @@ public class DemonBoss extends Boss {
 			_attack3 = false;
 			_counter3 = 0;
 			_a3count = 0;
+		}
+	}
+	
+	public void attack4() {
+		_counter4 = 0;
+		_attack4 = true;
+	}
+	
+	public void executeAttack4() {
+		int x = TheGame._character1.getX();
+		int y = TheGame._character1.getY();
+		if(_counter4 == 1) {
+			Hitbox a = new HitboxImpl("pentagram1", this, false, x-12, 60, 75, 75, 0, 0, 0, 1, new Image("demonboss/shot/1.png"));
+			 a.setCircle(true);
+			 a.setDissappearOnHit(false);
+			 TheGame._attacks.add(a);
+			 a = new HitboxImpl("pentagram2", this, false, 0, y-12, 75, 75, 0, 0, 0, 1, new Image("demonboss/shot/1.png"));
+			 a.setCircle(true);
+			 a.setDissappearOnHit(false);
+			 TheGame._attacks.add(a);
+		}
+		if(_counter4 < 50){
+		for(Hitbox a : TheGame._attacks) {
+			if(a.getID().equals("pentagram1")) {
+				a.setX(x-12);
+			}
+			if(a.getID().equals("pentagram2")) {
+				a.setY(y-12);
+			}
+		}
+		}
+		if(_counter4 == 50) {
+			for(Hitbox a : TheGame._attacks) {
+				if(a.getID().equals("pentagram1")) {
+					a.setYVelocity(20);
+				}
+				if(a.getID().equals("pentagram2")) {
+					a.setXVelocity(20);
+				}
+			}
+		}
+		if(_counter4 == 60) {
+			_attack4 = false;
+			_counter3 = 0;
 		}
 	}
 }

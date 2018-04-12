@@ -154,6 +154,7 @@ public class TheGame extends Application {
 	private Button _skull = new Button("select");
 	private Button _twins = new Button("select");
 	private Button _spike2 = new Button("select");
+	private Button _demon = new Button("select");
 	
 	private Button _toot = new Button("fight!");
 	private Button _crush = new Button("fight!");
@@ -165,6 +166,7 @@ public class TheGame extends Application {
 	private Button _cranius = new Button("fight!");
 	private Button _candm = new Button("fight");
 	private Button _spiball2 = new Button("fight");
+	private Button _nero = new Button("fight");
 	
 	private String _beattoot;
 	private String _beatswurli;
@@ -176,6 +178,7 @@ public class TheGame extends Application {
 	private String _beatcranius;
 	private String _beatcandm;
 	private String _beatspiball2;
+	private String _beatnero;
 	
 	private static Image _text;
 	
@@ -228,6 +231,7 @@ public class TheGame extends Application {
 			_beatcranius = read(reader);
 			_beatcandm = read(reader);
 			_beatspiball2 = read(reader);
+			_beatnero = read(reader);
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -278,6 +282,7 @@ public class TheGame extends Application {
 					_gc.drawImage(new Image("text/charscreen.png"), 0, 0);
 					int x = 900;
 					int y = 77;
+if(_beatnero.equals("f")){
 	
 if(_beatspiball2.equals("f")){
 	x = 786;
@@ -307,6 +312,7 @@ if(_beatcandm.equals("f")){
 			}
 		}
 	}
+}
 }
 }
 					_gc.drawImage(new Image("text/black.png"), x, y);
@@ -427,6 +433,15 @@ if(_beatcandm.equals("f")){
 
 						_spike2.setOnMousePressed(m::handleButtonPress);
 					}
+					if (!_root1.getChildren().contains(_demon) && _beatnero.equals("t")) {
+						_demon.setMinWidth(45);
+						_demon.setMinHeight(12);
+						_demon.setLayoutX(46);
+						_demon.setLayoutY(211);
+						_root1.getChildren().add(_demon);
+
+						_demon.setOnMousePressed(m::handleButtonPress);
+					}
 					
 				} else if(!_bosspicked) {
 					_gc.drawImage(new Image("text/bossscreen.png"), 0, 0);
@@ -443,7 +458,10 @@ if(_beatcandm.equals("f")){
 					int y = 77;
 					int x1 = 900;
 					int y1 = 600;
-	if(!_beatcandm.equals("t")){
+if(!_beatspiball2.equals("t")){
+	x1 = 374;
+	y1 = 183;
+if(!_beatcandm.equals("t")){
 		x1 = 256;
 		y1 = 183;
 	if(!_beatcranius.equals("t")){
@@ -474,6 +492,7 @@ if(_beatcandm.equals("f")){
 		}
 	}
 	}
+}
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					_gc.drawImage(new Image("text/black.png"), x1, y1);
 					if (!_root1.getChildren().contains(_toot)) {
@@ -565,6 +584,15 @@ if(_beatcandm.equals("f")){
 						_root1.getChildren().add(_spiball2);
 
 						_spiball2.setOnMousePressed(m::handleButtonPress);
+					}
+					if (!_root1.getChildren().contains(_nero) && _beatspiball2.equals("t")) {
+						_nero.setMinWidth(60);
+						_nero.setMinHeight(25);
+						_nero.setLayoutX(388);
+						_nero.setLayoutY(219);
+						_root1.getChildren().add(_nero);
+
+						_nero.setOnMousePressed(m::handleButtonPress);
 					}
 					
 				} else {
@@ -858,6 +886,14 @@ public void handleKeyRelease(KeyEvent event) {
 			}
 			_beatspiball = "t";
 		}
+		if(_boss.getID().equals("demonboss")){
+			if(_beatnero.equals("f")){
+				_gotpower = true;
+				_power = "nero";
+				_newskin = "demon";
+			}
+			_beatnero = "t";
+		}
 		
 		}
 		BufferedWriter writer = null;
@@ -873,6 +909,7 @@ public void handleKeyRelease(KeyEvent event) {
 			write(writer, _beatcranius);
 			write(writer, _beatcandm);
 			write(writer, _beatspiball2);
+			write(writer, _beatnero);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1004,6 +1041,10 @@ public void handleButtonPress(MouseEvent click) {
 		_skin = "spike2";
 		_charpicked = true;
 	}
+	if(click.getSource().equals(_demon)) {
+		_skin = "demon";
+		_charpicked = true;
+	}
 	
 	
 	
@@ -1029,7 +1070,7 @@ public void handleButtonPress(MouseEvent click) {
 		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
-		_boss = new DemonBoss();
+		_boss = new RockBoss();
 		_bosspicked = true;
 		playStageSong("/songs/crush.mp3");
 	}
@@ -1068,6 +1109,12 @@ public void handleButtonPress(MouseEvent click) {
 		_bosspicked = true;
 		playStageSong("/songs/spiball2.mp3");
 	}
+	if(click.getSource().equals(_nero)) {
+		_boss = new DemonBoss();
+		_bosspicked = true;
+		playStageSong("/songs/nero.mp3");
+	}
+	
 	
 	
 	
@@ -1175,6 +1222,14 @@ public void handleButtonPress(MouseEvent click) {
 				}
 				_beatspiball = "t";
 			}
+			if(_boss.getID().equals("demonboss")){
+				if(_beatnero.equals("f")){
+					_gotpower = true;
+					_power = "nero";
+					_newskin = "demon";
+				}
+				_beatnero = "t";
+			}
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter("data.txt"));
@@ -1188,6 +1243,7 @@ public void handleButtonPress(MouseEvent click) {
 			write(writer, _beatcranius);
 			write(writer, _beatcandm);
 			write(writer, _beatspiball2);
+			write(writer, _beatnero);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

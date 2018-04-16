@@ -66,4 +66,12 @@ public interface Hitbox extends Entity {
 	public void setFreezeY(boolean b);
 	
 	public void setCircle(boolean b);
+	
+	public void setFreeze(boolean b);
+	public boolean isFreeze();
+	public void setHarmless(boolean b);
+	public boolean isHarmless();
+	public void setAutogone(boolean b);
+	public boolean isAutogone();
+	
 }

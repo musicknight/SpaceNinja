@@ -25,6 +25,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import cd.bosses.Boss;
 import cd.bosses.BotBoss;
+import cd.bosses.CometBoss;
 import cd.bosses.DemonBoss;
 import cd.bosses.DragonBoss;
 import cd.bosses.GhostBoss;
@@ -35,6 +36,7 @@ import cd.bosses.SpikeBoss;
 import cd.bosses.SpikeBoss2;
 import cd.bosses.TootBoss;
 import cd.bosses.TwinsBoss;
+import cd.bosses.UltimoBoss;
 import cd.chars.Ninja1Char;
 import cd.chars.CDCharacter;
 import cd.chars.Character;
@@ -115,12 +117,14 @@ public class TheGame extends Application {
 	private boolean _songplaying;
 	private boolean _vsongplaying;
 	public static GraphicsContext _gc = _canvas.getGraphicsContext2D();
+	public static GraphicsContext _gc2 = _canvas.getGraphicsContext2D();
 	private Stage _stage;
 	private Scene _scene;
 	private AnimationTimer _animationTimer;
 	public static Set<Hitbox> _attacks = new HashSet<Hitbox>();
 	public static List<Platform> _platforms = new ArrayList<Platform>();
 	public static List<Backdrop> _backdrops = new ArrayList<Backdrop>();
+	public static List<Backdrop> _frontdrops = new ArrayList<Backdrop>();
 	private Image _scroll = new Image("scroll/space.png");
 	private int _scrollc = 0;
 	private boolean _charpicked = false;
@@ -236,6 +240,39 @@ public class TheGame extends Application {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if(_beattoot == null) {
+			_beattoot = "f";
+		}
+		if(_beatswurli == null) {
+			_beatswurli = "f";
+		}
+		if(_beatcrush == null) {
+			_beatcrush = "f";
+		}
+		if(_beatspiball == null) {
+			_beatspiball = "f";
+		}
+		if(_beatlaser == null) {
+			_beatlaser = "f";
+		}
+		if(_beatcrunch == null) {
+			_beatcrunch = "f";
+		}
+		if(_beatdroth == null) {
+			_beatdroth = "f";
+		}
+		if(_beatcranius == null) {
+			_beatcranius = "f";
+		}
+		if(_beatcandm == null) {
+			_beatcandm = "f";
+		}
+		if(_beatspiball2 == null) {
+			_beatspiball2 = "f";
+		}
+		if(_beatnero == null) {
+			_beatnero = "f";
 		}
 		
 		// character selection screen
@@ -696,6 +733,9 @@ if(!_beatcandm.equals("t")){
 						playStageSong("/songs/lose.mp3");
 						_vsongplaying = true;
 				}
+				for(Backdrop b : _frontdrops) {
+					TheGame._gc.drawImage(b.getImage(), b.getX(), b.getY(), b.getWidth(), b.getHeight());
+				}
 				if(_boss.isDead() || _boss.isWon()){
 					_character1.setImmune(true);
 					if(_boss.isDead() && !_vsongplaying) {
@@ -897,7 +937,15 @@ public void handleKeyRelease(KeyEvent event) {
 			}
 			_beatnero = "t";
 		}
-		
+		if(_gotpower) {
+			try {
+				_player.stop();
+			} catch (BasicPlayerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			playStageSong("/songs/power.mp3");
+		}
 		}
 		BufferedWriter writer = null;
 		try {
@@ -1073,7 +1121,7 @@ public void handleButtonPress(MouseEvent click) {
 		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
-		_boss = new RockBoss();
+		_boss = new UltimoBoss();
 		_bosspicked = true;
 		playStageSong("/songs/crush.mp3");
 	}
@@ -1232,6 +1280,15 @@ public void handleButtonPress(MouseEvent click) {
 					_newskin = "demon";
 				}
 				_beatnero = "t";
+			}
+			if(_gotpower) {
+				try {
+					_player.stop();
+				} catch (BasicPlayerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				playStageSong("/songs/power.mp3");
 			}
 		BufferedWriter writer = null;
 		try {

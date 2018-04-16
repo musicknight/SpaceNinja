@@ -19,9 +19,6 @@ public class SpikeBoss2 extends Boss{
 	private int _repeat2;
 	private int _repeat3;
 	private int _repeat4;
-	private boolean _spritesswitched;
-	private boolean _spritesswitched2;
-	private boolean _spritesswitched1;
 	private int _repeatno1;
 	private int _repeatno2;
 	private int _repeatno3;

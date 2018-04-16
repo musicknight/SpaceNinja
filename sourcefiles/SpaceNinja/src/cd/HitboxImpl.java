@@ -27,6 +27,9 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 	protected boolean _gone = false;
 	protected boolean _dissappearonhit = true;
 	protected boolean _circle = false;
+	protected boolean _freeze;
+	protected boolean _harmless;
+	protected boolean _autogone = true;
 	// this decides whether the knockback is in relation to character or hitbox
 	protected boolean _horientation = false;
 	
@@ -116,10 +119,10 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 				gc.drawImage(_image, _x, _y, _width, _height);
 			}
 		}
-		if (_y + _yvelocity > 600) {
+		if (_y + _yvelocity > 600 && _autogone) {
 			_gone = true;
 		}
-		if (_x + _xvelocity > 900 || _x + _xvelocity + _width < 0) {
+		if ((_x + _xvelocity > 900 || _x + _xvelocity + _width < 0) && _autogone) {
 			_gone = true;
 		}
 		_y += _yvelocity;
@@ -352,6 +355,24 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 	public Boss getSubBoss() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public void setFreeze(boolean b) {
+		_freeze = b;
+	}
+	public boolean isFreeze() {
+		return _freeze;
+	}
+	public void setHarmless(boolean b) {
+		_harmless = b;
+	}
+	public boolean isHarmless() {
+		return _harmless;
+	}
+	public void setAutogone(boolean b) {
+		_autogone = b;
+	}
+	public boolean isAutogone() {
+		return _autogone;
 	}
 
 }

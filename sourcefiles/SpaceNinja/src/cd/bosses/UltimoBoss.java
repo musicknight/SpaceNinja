@@ -28,6 +28,9 @@ public class UltimoBoss extends Boss {
 	private int _atk1count;
 	private boolean _gattack1;
 	private int _gatk1count;
+	private boolean _gattack2;
+	private Hitbox _gdrop;
+	private boolean _stunned;
 	
 	
 	public UltimoBoss() {
@@ -88,8 +91,11 @@ public class UltimoBoss extends Boss {
 		if(_gattack1) {
 			executeGAttack1();
 		}
+		if(_gattack2) {
+			executeGAttack2();
+		}
 		
-		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_gattack1 &&  !_dead
+		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_gattack1 && !_gattack2 &&  !_dead
 				&& !_changeform0 && !_changeform1 && !_changeform2 && !_changeform3 && !_changeform4) {
 		if(_counter1 < 29) {
 			_yvelocity = 0;
@@ -122,20 +128,19 @@ public class UltimoBoss extends Boss {
 				}
 				_atkcount = 0;
 			} else {
-			i = 0;
+			i = 1;
 			if(i == 0) {
 				if(_form == 0) {
 				attack1();
 				} else if (_form == 1) {
-				System.out.println("here");
 				gattack1();
 				}
 			}
 			if(i == 1) {
 				if(_form == 0){
 				attack2();
-				} else if(_form == 2) {
-				//gattack2();
+				} else if(_form == 1) {
+				gattack2();
 				}
 			}
 			if(i == 2) {
@@ -279,6 +284,60 @@ public class UltimoBoss extends Boss {
 			_yvelocity = 0;
 			_gattack1 = false;
 			_gatk1count = 0;
+			_counter3 = 0;
+			_rate2 = 3;
+		}
+	}
+	
+	public void gattack2() {
+		_rate2 = 1;
+		_counter4 = 0;
+		_gattack2 = true;
+		_yvelocity = -5;
+	}
+	
+	public void executeGAttack2() {
+		if(_counter4 == 15) {
+			_yvelocity = 0;
+		}
+		if(_counter4 == 25) {
+			_gdrop = new HitboxImpl("uball", this, true, _x-25, _y-25, 200, 200, 0, 3, 0, 1, new Image("ultimoboss/shots/g.png"));
+			_gdrop.setDissappearOnHit(false);
+			_gdrop.setCircle(true);
+			TheGame._attacks.add(_gdrop);
+		}
+		if(_counter4 > 25 && _gdrop.getY()+200 >= 442 && _gdrop.getYVelocity() != 0) {
+			_gdrop.setY(442-200);
+			_gdrop.setYVelocity(0);
+			TheGame.playSound("/rockboss/sounds/slam.wav");
+			if(TheGame._character1.getY() == 392) {
+				TheGame._character1.setCanAct(false);
+				TheGame._character1.setXVelocity(0);
+				TheGame._character1.setYVelocity(0);
+				_stunned = true;
+			}
+		}
+		if(_stunned) {
+			TheGame._gc.drawImage(new Image("ninja/stun.png"), TheGame._character1.getX() - 10, TheGame._character1.getY());
+			TheGame._gc.drawImage(new Image("ninja/stun.png"), TheGame._character1.getX() + TheGame._character1.getWidth(), TheGame._character1.getY());
+		}
+		if(_counter4 == 75) {
+			_gdrop.setXVelocity(-25);
+			_yvelocity = 5;
+		}
+		if(_counter4 >= 75 && _counter4 % 5 == 0 && _counter4 < 90) {
+			Hitbox a = new HitboxImpl("uball", this, false, _x, _y+50, 50, 50, -10, 2, 0, 1, new Image("ultimoboss/shots/g.png"));
+			a.setDissappearOnHit(false);
+			a.setCircle(true);
+			TheGame._attacks.add(a);
+		}
+		if(_counter4 == 90) {
+			_yvelocity = 0;
+		}
+		if(_counter4 == 100) {
+			_stunned = false;
+			TheGame._character1.setCanAct(true);	
+			_gattack2 = false;
 			_counter3 = 0;
 			_rate2 = 3;
 		}

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import cd.Backdrop;
+import cd.CharLinkedHitbox;
 import cd.Hitbox;
 import cd.HitboxImpl;
 import cd.TheGame;
@@ -20,6 +21,7 @@ public class UltimoBoss extends Boss {
 	private int _repeat1;
 	private int _atkcount = 3;
 	private Backdrop _flash = new Backdrop(new Image("ultimoboss/flash.png"), 0, 0, 900, 600);
+	private Hitbox _body = new CharLinkedHitbox("ultimobody", this, 0, 1);
 	private boolean _changeform1;
 	private boolean _changeform2;
 	private boolean _changeform3;
@@ -59,11 +61,16 @@ public class UltimoBoss extends Boss {
 		_balls.add(new Image("ultimoboss/balls1/18.png"));
 		_balls.add(new Image("ultimoboss/balls1/19.png"));
 		_balls.add(new Image("ultimoboss/balls1/20.png"));
+		_body = new CharLinkedHitbox("ultimobody", this, 0, 1);
+		_body.setCircle(true);
 	}
 	
 	@Override
 	public void render(GraphicsContext gc) {
 		super.render(gc);
+		if(!TheGame._attacks.contains(_body)) {
+			TheGame._attacks.add(_body);
+		}
 		Image bd = _balls.get(_spriteindex);
 		if(_counter % _rate2 == 0) {
 			if(_spriteindex < _balls.size() -1) {
@@ -78,6 +85,9 @@ public class UltimoBoss extends Boss {
 		}
 		if(_changeform1) {
 			changeform1();
+		}
+		if(_changeform2) {
+			changeform2();
 		}
 		
 		
@@ -113,6 +123,8 @@ public class UltimoBoss extends Boss {
 			Random r = new Random();
 			int i = r.nextInt(3);
 			_counter3 = 0;
+			_form = 1;
+			_atkcount = 3;
 			if(_atkcount == 3) {
 				_counter4 = 0;
 				if(_form == 0) {
@@ -359,7 +371,44 @@ public class UltimoBoss extends Boss {
 	}
 
 	private void changeform2() {
-		// TODO Auto-generated method stub
+		if(_counter4 == 1) {
+			_rate2 = 1;
+		}
+		if(_counter4 == 20) {
+			TheGame._frontdrops.add(_flash);
+		}
+		if(_counter4 == 22) {
+			_balls.clear();
+			_balls.add(new Image("ultimoboss/balls3/1.png"));
+			_balls.add(new Image("ultimoboss/balls3/2.png"));
+			_balls.add(new Image("ultimoboss/balls3/3.png"));
+			_balls.add(new Image("ultimoboss/balls3/4.png"));
+			_balls.add(new Image("ultimoboss/balls3/5.png"));
+			_balls.add(new Image("ultimoboss/balls3/6.png"));
+			_balls.add(new Image("ultimoboss/balls3/7.png"));
+			_balls.add(new Image("ultimoboss/balls3/8.png"));
+			_balls.add(new Image("ultimoboss/balls3/9.png"));
+			_balls.add(new Image("ultimoboss/balls3/10.png"));
+			_balls.add(new Image("ultimoboss/balls3/11.png"));
+			_balls.add(new Image("ultimoboss/balls3/12.png"));
+			_balls.add(new Image("ultimoboss/balls3/13.png"));
+			_balls.add(new Image("ultimoboss/balls3/14.png"));
+			_balls.add(new Image("ultimoboss/balls3/15.png"));
+			_balls.add(new Image("ultimoboss/balls3/16.png"));
+			_balls.add(new Image("ultimoboss/balls3/17.png"));
+			_balls.add(new Image("ultimoboss/balls3/18.png"));
+			_balls.add(new Image("ultimoboss/balls3/19.png"));
+			_balls.add(new Image("ultimoboss/balls3/20.png"));
+		}
+		if(_counter4 == 25) {
+			TheGame._frontdrops.remove(_flash);
+		}
+		if(_counter4 == 40) {
+			_rate2 = 3;
+			_counter3 = 0;
+			_changeform2 = false;
+			_form = 2;
+		}
 		
 	}
 
@@ -416,7 +465,6 @@ public class UltimoBoss extends Boss {
 	public void executeSpawn() {
 		if(_counter2 == 50) {
 			_xvelocity = 0;
-			System.out.println(_x);
 		}
 	}
 

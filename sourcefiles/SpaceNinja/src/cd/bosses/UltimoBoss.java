@@ -18,7 +18,7 @@ public class UltimoBoss extends Boss {
 	private int _rate2 = 3;
 	private int _form;
 	private int _repeat1;
-	private int _atkcount;
+	private int _atkcount = 3;
 	private Backdrop _flash = new Backdrop(new Image("ultimoboss/flash.png"), 0, 0, 900, 600);
 	private boolean _changeform1;
 	private boolean _changeform2;
@@ -26,6 +26,8 @@ public class UltimoBoss extends Boss {
 	private boolean _changeform4;
 	private boolean _changeform0;
 	private int _atk1count;
+	private boolean _gattack1;
+	private int _gatk1count;
 	
 	
 	public UltimoBoss() {
@@ -83,8 +85,11 @@ public class UltimoBoss extends Boss {
 		if(_attack2) {
 			executeAttack2();
 		}
+		if(_gattack1) {
+			executeGAttack1();
+		}
 		
-		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_dead
+		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_gattack1 &&  !_dead
 				&& !_changeform0 && !_changeform1 && !_changeform2 && !_changeform3 && !_changeform4) {
 		if(_counter1 < 29) {
 			_yvelocity = 0;
@@ -115,16 +120,22 @@ public class UltimoBoss extends Boss {
 				} else if(_form == 4) {
 					_changeform0 = true;
 				}
+				_atkcount = 0;
 			} else {
-			i = 1;
+			i = 0;
 			if(i == 0) {
 				if(_form == 0) {
 				attack1();
+				} else if (_form == 1) {
+				System.out.println("here");
+				gattack1();
 				}
 			}
 			if(i == 1) {
 				if(_form == 0){
 				attack2();
+				} else if(_form == 2) {
+				//gattack2();
 				}
 			}
 			if(i == 2) {
@@ -219,6 +230,59 @@ public class UltimoBoss extends Boss {
 			_counter3 = 0;
 		}
 		}
+	
+	public void gattack1() {
+		_gattack1 = true;
+		_rate2 = 1;
+		_counter4 = 0;
+	}
+	
+	public void executeGAttack1() {
+		if(_counter4 == 15) {
+			_yvelocity = 18;
+		}
+		if(_counter4 == 25) {
+			_yvelocity = 0;
+		}
+		if(_counter4 == 35) {
+			Hitbox a = new HitboxImpl("uball", this, false, _x, _y, 150, 150, -10, 0, 0, 1, new Image("ultimoboss/shots/g.png"));
+			a.setDissappearOnHit(false);
+			a.setCircle(true);
+			TheGame._attacks.add(a);
+		}
+		if(_counter4 == 40) {
+			_yvelocity = -14;
+		}
+		if(_counter4 == 50) {
+			_yvelocity = 0;
+		}
+		if(_counter4 == 60) {
+			Hitbox a = new HitboxImpl("uball", this, false, _x, _y, 150, 150, -10, 0, 0, 1, new Image("ultimoboss/shots/g.png"));
+			a.setDissappearOnHit(false);
+			a.setCircle(true);
+			TheGame._attacks.add(a);
+		}
+		if(_counter4 == 65) {
+			_yvelocity = 14;
+		}
+		if(_counter4 == 75) {
+			_yvelocity = 0;
+		}
+		if(_counter4 == 85 && _gatk1count < 3) {
+			_counter4 = 34;
+			_gatk1count++;
+		}
+		if(_counter4 == 90) {
+			_yvelocity = -18;
+		}
+		if(_counter4 == 100) {
+			_yvelocity = 0;
+			_gattack1 = false;
+			_gatk1count = 0;
+			_counter3 = 0;
+			_rate2 = 3;
+		}
+	}
 
 	private void changeform0() {
 		// TODO Auto-generated method stub

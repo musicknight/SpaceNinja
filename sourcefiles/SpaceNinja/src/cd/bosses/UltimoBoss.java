@@ -8,6 +8,7 @@ import cd.Backdrop;
 import cd.CharLinkedHitbox;
 import cd.Hitbox;
 import cd.HitboxImpl;
+import cd.MeleeHitbox;
 import cd.TheGame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -39,10 +40,19 @@ public class UltimoBoss extends Boss {
 	private int _chary;
 	private boolean _rattack2;
 	private int _ratk2count;
+	private boolean _lasershot;
+	private boolean _yattack1;
+	private boolean _yattack2;
+	private boolean _1sttime;
+	private int _text = 1;
 	
-	
-	public UltimoBoss() {
+	public UltimoBoss(String b) {
 		super(900, 600, "ultimoboss");
+		if(b.equals("t")) {
+			_1sttime = false;
+		} else {
+			_1sttime = true;
+		}
 		_health = 2000;
 		_width = 150;
 		_height = 150;
@@ -74,6 +84,43 @@ public class UltimoBoss extends Boss {
 	@Override
 	public void render(GraphicsContext gc) {
 		super.render(gc);
+		if(TheGame._character1.getLives()<=0) {
+			_won = true;
+		}
+		if(_1sttime) {
+			TheGame._character1.setCanAct(false);
+			if(_counter2 == 0) {
+				if(_text == 11) {
+					_counter3 = 0;
+					_1sttime = false;
+					TheGame._character1.setCanAct(true);
+					TheGame.endUDialogue();
+				} else {
+					TheGame.setText(new Image("ultimoboss/text/s" + _text + ".png"));
+				}
+			
+				
+			}
+		}
+		if(_counter2 == 240 && _text != 11) {
+			TheGame.stopText();
+			_text++;
+			if(_1sttime){
+			_counter2 = -20;
+			}
+		}
+		if(_counter2 == 0 && !_dead && !_1sttime) {
+			 if(!_dead) {
+				int i = _random.nextInt(9) + 1;
+				
+				TheGame.setText(new Image("ultimoboss/text/" + i + ".png"));
+			} 
+			
+		}
+		if(_counter2 == 150 && !_1sttime) {
+			TheGame.stopText();
+			_counter2 = -500;
+		}
 		if(!TheGame._attacks.contains(_body)) {
 			TheGame._attacks.add(_body);
 		}
@@ -89,11 +136,17 @@ public class UltimoBoss extends Boss {
 		if(_spawning) {
 			executeSpawn();
 		}
+		if(_changeform0) {
+			changeform0();
+		}
 		if(_changeform1) {
 			changeform1();
 		}
 		if(_changeform2) {
 			changeform2();
+		}
+		if(_changeform3) {
+			changeform3();
 		}
 		
 		
@@ -116,9 +169,15 @@ public class UltimoBoss extends Boss {
 		if(_rattack2) {
 			executeRAttack2();
 		}
+		if(_yattack1) {
+			executeYAttack1();
+		}
+		if(_yattack2) {
+			executeYAttack2();
+		}
 		
 		if(!_attack1 && !_attack2 && !_attack3 && !_attack4 && !_attack5 && !_gattack1 && !_gattack2 && !_rattack1 && !_rattack2 &&
-				!_dead && !_changeform0 && !_changeform1 && !_changeform2 && !_changeform3 && !_changeform4) {
+				!_yattack1 && !_yattack2 && !_dead && !_changeform0 && !_changeform1 && !_changeform2 && !_changeform3 && !_changeform4) {
 		if(_counter1 < 29) {
 			_yvelocity = 0;
 			if(_counter % 3 == 0){
@@ -131,7 +190,10 @@ public class UltimoBoss extends Boss {
 		} else {
 			_counter1 = 0;
 		}
-		if(_counter3 == 90 && !_won) {
+		if(_won) {
+			TheGame.setText(new Image("ultimoboss/text/won.png"));
+		}
+		if(_counter3 == 90 && !_won && !_1sttime) {
 			Random r = new Random();
 			int i = r.nextInt(3);
 			_counter3 = 0;
@@ -144,8 +206,6 @@ public class UltimoBoss extends Boss {
 				} else if(_form == 2) {
 					_changeform3 = true;
 				} else if(_form == 3) {
-					_changeform4 = true;
-				} else if(_form == 4) {
 					_changeform0 = true;
 				}
 				_atkcount = 0;
@@ -158,6 +218,8 @@ public class UltimoBoss extends Boss {
 				gattack1();
 				} else if(_form == 2) {
 				rattack1();
+				} else if(_form == 3) {
+				yattack1();
 				}
 			}
 			if(i == 1) {
@@ -167,6 +229,8 @@ public class UltimoBoss extends Boss {
 				gattack2();
 				} else if(_form == 2) {
 				rattack2();
+				} else if(_form == 3) {
+				yattack2();	
 				}
 			}
 			if(i == 2) {
@@ -335,6 +399,7 @@ public class UltimoBoss extends Boss {
 		if(_counter4 > 25 && _gdrop.getY()+200 >= 442 && _gdrop.getYVelocity() != 0) {
 			_gdrop.setY(442-200);
 			_gdrop.setYVelocity(0);
+			_gdrop.setGravity(false);
 			TheGame.playSound("/rockboss/sounds/slam.wav");
 			if(TheGame._character1.getY() == 392) {
 				TheGame._character1.setCanAct(false);
@@ -541,18 +606,199 @@ public class UltimoBoss extends Boss {
 		}
 	}
 	
+	public void yattack1() {
+		_yattack1 = true;
+		_counter4 = 0;
+		_rate2 = 1;
+	}
+	
+	public void executeYAttack1() {
+		if(_counter4 == 5) {
+			_yvelocity = 12;
+		}
+		if(_counter4 == 20) {
+			_yvelocity = 0;
+			
+		}
+		if(_counter4 >= 20) {
+			makeVLaser(_counter4-20, 0, "laser");
+			makeVLaser(_counter4-20, 225, "laser");
+			makeVLaser(_counter4-20, 450, "laser");
+			makeVLaser(_counter4-20, 675, "laser");
+		}
+		if(_counter4 == 60) {
+			_xvelocity = 7;
+		}
+		if(_counter4 == 70){
+			_xvelocity = -30;
+		}
+		if(_counter4 == 110) {
+			_xvelocity = 20;
+		}
+		if(_counter4 == 170) {
+			_xvelocity = 0;
+		}
+		if(_counter4 >= 190 && _counter4 % 5 == 0 && _counter4 < 215) {
+			Hitbox a = new HitboxImpl("uball", this, false, _x, _y+37, 75, 75, -15, 0, 0, 1, new Image("ultimoboss/shots/y.png"));
+			a.setCircle(true);
+			a.setDissappearOnHit(false);
+			TheGame._attacks.add(a);
+		}
+		if(_counter4 == 215) {
+			_rate2 = 3;
+			_yvelocity = -40;
+		}
+		if(_counter4 == 230) {
+			_x = 645;
+			_yvelocity = 20;
+		}
+		if(_counter4 >= 230 && _y >= 125) {
+			_y = 125;
+			_yvelocity = 0;
+			_yattack1 = false;
+			_counter3 = 0;
+			TheGame.clearHitboxes("laser", this);
+		}
+	}
+	
+	public void yattack2() {
+		_yattack2 = true;
+		_counter4 = 0;
+		_rate2 = 1;
+		_yvelocity = 10;
+	}
+	
+	public void executeYAttack2() {
+		if(_counter4 == 15) {
+			_yvelocity = 0;
+		}
+		if(_counter4 >= 15 && _counter4 % 50 == 0 && _counter4 < 385) {
+			Hitbox a = new HitboxImpl("uball", this, false, _x, _y, 150, 150, -9, 0, 0, 1, new Image("ultimoboss/shots/y.png"));
+			a.setCircle(true);
+			a.setDissappearOnHit(false);
+			TheGame._attacks.add(a);
+		}
+		if(_counter4 >= 15) {
+			makeHLaser( _counter4 - 15, 420, "laser");
+			makeHLaser( _counter4 - 15, 380, "laser");
+			makeHLaser( _counter4 - 15, 340, "laser");
+		}
+		if(_counter4 == 85) {
+			TheGame.clearHitboxes("laser", this);
+		}
+		if(_counter4 >= 115) {
+			makeHLaser( _counter4 - 115, 420, "laser");
+			makeHLaser( _counter4 - 115, 380, "laser");
+			makeHLaser( _counter4 - 115, 340, "laser");
+		}
+		if(_counter4 == 185) {
+			TheGame.clearHitboxes("laser", this);
+		}
+		if(_counter4 >= 215) {
+			makeHLaser( _counter4 - 215, 420, "laser");
+			makeHLaser( _counter4 - 215, 380, "laser");
+			makeHLaser( _counter4 - 215, 340, "laser");
+		}
+		if(_counter4 == 285) {
+			TheGame.clearHitboxes("laser", this);
+		}
+		if(_counter4 >= 315) {
+			makeHLaser( _counter4 - 315, 420, "laser");
+			makeHLaser( _counter4 - 315, 380, "laser");
+			makeHLaser( _counter4 - 315, 340, "laser");
+		}
+		if(_counter4 == 385) {
+			TheGame.clearHitboxes("laser", this);
+			_yvelocity = -10;
+			_rate2 = 3;
+		}
+		if(_counter4 == 400) {
+			_counter3 = 0;
+			_yattack2 = false;
+		}
+	}
 	private void changeform0() {
-		// TODO Auto-generated method stub
+		if(_counter4 == 1) {
+			_rate2 = 1;
+		}
+		if(_counter4 == 20) {
+			TheGame._frontdrops.add(_flash);
+		}
+		if(_counter4 == 22) {
+			_balls.clear();
+			_balls.add(new Image("ultimoboss/balls1/1.png"));
+			_balls.add(new Image("ultimoboss/balls1/2.png"));
+			_balls.add(new Image("ultimoboss/balls1/3.png"));
+			_balls.add(new Image("ultimoboss/balls1/4.png"));
+			_balls.add(new Image("ultimoboss/balls1/5.png"));
+			_balls.add(new Image("ultimoboss/balls1/6.png"));
+			_balls.add(new Image("ultimoboss/balls1/7.png"));
+			_balls.add(new Image("ultimoboss/balls1/8.png"));
+			_balls.add(new Image("ultimoboss/balls1/9.png"));
+			_balls.add(new Image("ultimoboss/balls1/10.png"));
+			_balls.add(new Image("ultimoboss/balls1/11.png"));
+			_balls.add(new Image("ultimoboss/balls1/12.png"));
+			_balls.add(new Image("ultimoboss/balls1/13.png"));
+			_balls.add(new Image("ultimoboss/balls1/14.png"));
+			_balls.add(new Image("ultimoboss/balls1/15.png"));
+			_balls.add(new Image("ultimoboss/balls1/16.png"));
+			_balls.add(new Image("ultimoboss/balls1/17.png"));
+			_balls.add(new Image("ultimoboss/balls1/18.png"));
+			_balls.add(new Image("ultimoboss/balls1/19.png"));
+			_balls.add(new Image("ultimoboss/balls1/20.png"));
+		}
+		if(_counter4 == 25) {
+			TheGame._frontdrops.remove(_flash);
+		}
+		if(_counter4 == 40) {
+			_rate2 = 3;
+			_counter3 = 0;
+			_changeform0 = false;
+			_form = 0;
+		}
 		
 	}
 
-	private void changeform4() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private void changeform3() {
-		// TODO Auto-generated method stub
+		if(_counter4 == 1) {
+			_rate2 = 1;
+		}
+		if(_counter4 == 20) {
+			TheGame._frontdrops.add(_flash);
+		}
+		if(_counter4 == 22) {
+			_balls.clear();
+			_balls.add(new Image("ultimoboss/balls4/1.png"));
+			_balls.add(new Image("ultimoboss/balls4/2.png"));
+			_balls.add(new Image("ultimoboss/balls4/3.png"));
+			_balls.add(new Image("ultimoboss/balls4/4.png"));
+			_balls.add(new Image("ultimoboss/balls4/5.png"));
+			_balls.add(new Image("ultimoboss/balls4/6.png"));
+			_balls.add(new Image("ultimoboss/balls4/7.png"));
+			_balls.add(new Image("ultimoboss/balls4/8.png"));
+			_balls.add(new Image("ultimoboss/balls4/9.png"));
+			_balls.add(new Image("ultimoboss/balls4/10.png"));
+			_balls.add(new Image("ultimoboss/balls4/11.png"));
+			_balls.add(new Image("ultimoboss/balls4/12.png"));
+			_balls.add(new Image("ultimoboss/balls4/13.png"));
+			_balls.add(new Image("ultimoboss/balls4/14.png"));
+			_balls.add(new Image("ultimoboss/balls4/15.png"));
+			_balls.add(new Image("ultimoboss/balls4/16.png"));
+			_balls.add(new Image("ultimoboss/balls4/17.png"));
+			_balls.add(new Image("ultimoboss/balls4/18.png"));
+			_balls.add(new Image("ultimoboss/balls4/19.png"));
+			_balls.add(new Image("ultimoboss/balls4/20.png"));
+		}
+		if(_counter4 == 25) {
+			TheGame._frontdrops.remove(_flash);
+		}
+		if(_counter4 == 40) {
+			_rate2 = 3;
+			_counter3 = 0;
+			_changeform3 = false;
+			_form = 3;
+		}
 		
 	}
 
@@ -652,6 +898,49 @@ public class UltimoBoss extends Boss {
 	public void executeSpawn() {
 		if(_counter2 == 50) {
 			_xvelocity = 0;
+		}
+	}
+	
+	private void makeHLaser(int c, int y, String s) {
+		if(c == 0) {
+			TheGame.playSound("/botboss/sounds/charge.wav");
+		}
+		if(c < 60) {
+			TheGame._gc.drawImage(new Image("ultimoboss/lasers/hpre.png"), 0, y, 900, 22);
+		}
+		if(c == 60 || c == 61) {
+			Hitbox a = new MeleeHitbox(s, this, 0, y, 900, 22, 0, 1, new Image("ultimoboss/lasers/h1.png"));
+			a.setDissappearOnHit(false);
+			TheGame._attacks.add(a);
+			TheGame.playSound("/botboss/sounds/shot.wav");
+			if(!_lasershot){
+				TheGame.playSound("/botboss/sounds/shot.wav");
+				_lasershot = true;
+				}
+		}
+		if(c == 62) {
+			_lasershot = false;
+		}
+	}
+	private void makeVLaser(int c, int x, String s) {
+		
+		if(c == 0) {
+			TheGame.playSound("/botboss/sounds/charge.wav");
+		}
+		if(c < 60) {
+			TheGame._gc.drawImage(new Image("ultimoboss/lasers/vpre.png"), x, 60, 22, 900);
+		}
+		if(c == 60 || c == 61 ) {
+			Hitbox a = new MeleeHitbox(s, this, x, 60, 22, 900, 0, 1, new Image("ultimoboss/lasers/v1.png"));
+			a.setDissappearOnHit(false);
+			TheGame._attacks.add(a);
+			if(!_lasershot){
+			TheGame.playSound("/botboss/sounds/shot.wav");
+			_lasershot = true;
+			}
+		}
+		if(c == 62) {
+			_lasershot = false;
 		}
 	}
 

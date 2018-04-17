@@ -374,5 +374,9 @@ public class HitboxImpl extends EntityImpl implements Hitbox {
 	public boolean isAutogone() {
 		return _autogone;
 	}
+	
+	public void setGravity(boolean b) {
+		_affectedbygravity = b;
+	}
 
 }

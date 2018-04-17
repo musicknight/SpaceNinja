@@ -605,10 +605,6 @@ private void makeVLaser(int c, int x, String s) {
 	if(c == 62) {
 		_lasershot = false;
 	}
-	if(c == 85 || c == 86) {
-		TheGame.clearHitboxes(s, this);
-		
-	}
 }
 private void makeHLaser(int c, int y, String s) {
 	if(c == 0) {
@@ -628,10 +624,6 @@ private void makeHLaser(int c, int y, String s) {
 			}
 	}
 	if(c == 62) {
-		_lasershot = false;
-	}
-	if(c == 85 || c == 86) {
-		TheGame.clearHitboxes(s, this);
 		_lasershot = false;
 	}
 }

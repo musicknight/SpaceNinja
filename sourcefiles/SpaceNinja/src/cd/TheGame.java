@@ -172,6 +172,9 @@ public class TheGame extends Application {
 	private Button _spiball2 = new Button("fight");
 	private Button _nero = new Button("fight");
 	
+	
+	private Button _ultimo = new Button("fight");
+	
 	private String _beattoot;
 	private String _beatswurli;
 	private String _beatcrush;
@@ -183,6 +186,8 @@ public class TheGame extends Application {
 	private String _beatcandm;
 	private String _beatspiball2;
 	private String _beatnero;
+	public static  String _1stultimo;
+	public static String _beatultimo;
 	
 	private static Image _text;
 	
@@ -236,6 +241,7 @@ public class TheGame extends Application {
 			_beatcandm = read(reader);
 			_beatspiball2 = read(reader);
 			_beatnero = read(reader);
+			_1stultimo = read(reader);
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -498,6 +504,10 @@ if(_beatcandm.equals("f")){
 					int y = 77;
 					int x1 = 900;
 					int y1 = 600;
+
+if(!_beatnero.equals("t")){
+	x1 = 475;
+	y1 = 183;
 if(!_beatspiball2.equals("t")){
 	x1 = 374;
 	y1 = 183;
@@ -532,6 +542,7 @@ if(!_beatcandm.equals("t")){
 		}
 	}
 	}
+}
 }
 					_gc.drawImage(new Image("text/black.png"), x, y);
 					_gc.drawImage(new Image("text/black.png"), x1, y1);
@@ -633,6 +644,15 @@ if(!_beatcandm.equals("t")){
 						_root1.getChildren().add(_nero);
 
 						_nero.setOnMousePressed(m::handleButtonPress);
+					}
+					if (!_root1.getChildren().contains(_ultimo) && _beatnero.equals("t")) {
+						_ultimo.setMinWidth(60);
+						_ultimo.setMinHeight(25);
+						_ultimo.setLayoutX(774);
+						_ultimo.setLayoutY(219);
+						_root1.getChildren().add(_ultimo);
+
+						_ultimo.setOnMousePressed(m::handleButtonPress);
 					}
 					
 				} else {
@@ -961,6 +981,7 @@ public void handleKeyRelease(KeyEvent event) {
 			write(writer, _beatcandm);
 			write(writer, _beatspiball2);
 			write(writer, _beatnero);
+			write(writer, _1stultimo);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1121,7 +1142,7 @@ public void handleButtonPress(MouseEvent click) {
 		playStageSong("/songs/swurli.mp3");
 	}
 	if(click.getSource().equals(_crush)) {
-		_boss = new UltimoBoss();
+		_boss = new RockBoss();
 		_bosspicked = true;
 		playStageSong("/songs/crush.mp3");
 	}
@@ -1164,6 +1185,11 @@ public void handleButtonPress(MouseEvent click) {
 		_boss = new DemonBoss();
 		_bosspicked = true;
 		playStageSong("/songs/nero.mp3");
+	}
+	if(click.getSource().equals(_ultimo)) {
+		_boss = new UltimoBoss(_1stultimo);
+		_bosspicked = true;
+		//playStageSong("/songs/nero.mp3");
 	}
 	
 	
@@ -1304,6 +1330,7 @@ public void handleButtonPress(MouseEvent click) {
 			write(writer, _beatcandm);
 			write(writer, _beatspiball2);
 			write(writer, _beatnero);
+			write(writer, _1stultimo);
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1357,6 +1384,10 @@ public String read(BufferedReader reader)throws IOException {
 		     
 		     return currentLine;
 		
+}
+
+public static void endUDialogue() {
+	_1stultimo = "t";
 }
 
 }

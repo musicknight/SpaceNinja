@@ -73,5 +73,7 @@ public interface Hitbox extends Entity {
 	public boolean isHarmless();
 	public void setAutogone(boolean b);
 	public boolean isAutogone();
+
+	public void setGravity(boolean b);
 	
 }

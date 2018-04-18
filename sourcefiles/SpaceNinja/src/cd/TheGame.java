@@ -1189,7 +1189,11 @@ public void handleButtonPress(MouseEvent click) {
 	if(click.getSource().equals(_ultimo)) {
 		_boss = new UltimoBoss(_1stultimo);
 		_bosspicked = true;
-		//playStageSong("/songs/nero.mp3");
+		if(_1stultimo.equals("f")){
+		playStageSong("/songs/ultimointro.mp3");
+		} else {
+		playStageSong("/songs/ultimo.mp3");
+		}
 	}
 	
 	

@@ -12,6 +12,7 @@ import cd.MeleeHitbox;
 import cd.TheGame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 public class UltimoBoss extends Boss {
 
@@ -93,6 +94,13 @@ public class UltimoBoss extends Boss {
 				if(_text == 11) {
 					_counter3 = 0;
 					_1sttime = false;
+					try {
+						TheGame._player.stop();
+					} catch (BasicPlayerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					TheGame.playStageSong("/songs/ultimo.mp3");
 					TheGame._character1.setCanAct(true);
 					TheGame.endUDialogue();
 				} else {
@@ -110,7 +118,9 @@ public class UltimoBoss extends Boss {
 			}
 		}
 		if(_counter2 == 0 && !_dead && !_1sttime) {
-			 if(!_dead) {
+			if(_spawning) {
+				TheGame.setText(new Image("ultimoboss/text/s10.png"));
+			} else if(!_dead) {
 				int i = _random.nextInt(9) + 1;
 				
 				TheGame.setText(new Image("ultimoboss/text/" + i + ".png"));
@@ -481,13 +491,13 @@ public class UltimoBoss extends Boss {
 		if(_counter4 == 70) {
 			for(Hitbox a : TheGame._attacks) {
 				if(a.getID().equals("pentagram1")) {
-					a.setYVelocity(20);
+					a.setYVelocity(15);
 				}
 				if(a.getID().equals("pentagram2")) {
-					a.setXVelocity(20);
+					a.setXVelocity(15);
 				}
 				if(a.getID().equals("pentagram3")) {
-					a.setXVelocity(-20);
+					a.setXVelocity(-15);
 				}
 			}
 		}
@@ -497,6 +507,7 @@ public class UltimoBoss extends Boss {
 		}
 		if(_counter4 == 100) {
 			_yvelocity = 0;
+			_y = 125;
 			_rattack1 = false;
 			_counter3 = 0;
 			_rate2 = 3;
@@ -600,6 +611,8 @@ public class UltimoBoss extends Boss {
 			_yvelocity = 20;
 		}
 		if(_counter4 == 170) {
+			_yvelocity = 0;
+			_y = 125;
 			_counter3 = 0;
 			_rattack2 = false;
 			_ratk2count = 0;
@@ -632,27 +645,27 @@ public class UltimoBoss extends Boss {
 		if(_counter4 == 70){
 			_xvelocity = -30;
 		}
-		if(_counter4 == 110) {
+		if(_counter4 == 120) {
 			_xvelocity = 20;
 		}
-		if(_counter4 == 170) {
+		if(_counter4 == 190) {
 			_xvelocity = 0;
 		}
-		if(_counter4 >= 190 && _counter4 % 5 == 0 && _counter4 < 215) {
+		if(_counter4 >= 200 && _counter4 % 5 == 0 && _counter4 < 225) {
 			Hitbox a = new HitboxImpl("uball", this, false, _x, _y+37, 75, 75, -15, 0, 0, 1, new Image("ultimoboss/shots/y.png"));
 			a.setCircle(true);
 			a.setDissappearOnHit(false);
 			TheGame._attacks.add(a);
 		}
-		if(_counter4 == 215) {
+		if(_counter4 == 225) {
 			_rate2 = 3;
 			_yvelocity = -40;
 		}
-		if(_counter4 == 230) {
+		if(_counter4 == 240) {
 			_x = 645;
 			_yvelocity = 20;
 		}
-		if(_counter4 >= 230 && _y >= 125) {
+		if(_counter4 >= 240 && _y >= 125) {
 			_y = 125;
 			_yvelocity = 0;
 			_yattack1 = false;
@@ -898,6 +911,7 @@ public class UltimoBoss extends Boss {
 	public void executeSpawn() {
 		if(_counter2 == 50) {
 			_xvelocity = 0;
+			_spawning = false;
 		}
 	}
 	
@@ -942,6 +956,14 @@ public class UltimoBoss extends Boss {
 		if(c == 62) {
 			_lasershot = false;
 		}
+	}
+	
+	@Override
+	public void hit(Hitbox h) {
+		super.hit(h);
+		//if(_health <= 0) {
+		//	_health = 1;
+		//}
 	}
 
 }

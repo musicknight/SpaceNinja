@@ -160,5 +160,9 @@ abstract public class Boss extends EntityImpl {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void setHealth(int i) {
+		_health = i;
+	}
 
 }
